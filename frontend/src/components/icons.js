@@ -1,0 +1,50 @@
+// Ícones de traço (24x24). Uso: icone('home') ou icone('home', 16)
+
+const CAMINHOS = {
+  home: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
+  check: 'M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M9 13.5l2 2 4-4',
+  users: 'M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 20v-1a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+  layers: 'M12 3 2 8l10 5 10-5zM2 13l10 5 10-5',
+  alert: 'M12 3.5 2.5 20h19zM12 10v4.5M12 17.6v.2',
+  bell: 'M6 9a6 6 0 1 1 12 0c0 6.5 2.5 8 2.5 8h-17S6 15.5 6 9M10 20.5a2 2 0 0 0 4 0',
+  compass: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15.5 8.5l-2 5-5 2 2-5z',
+  search: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3',
+  school: 'M3 21h18M5 21V9.5l7-5 7 5V21M10 21v-5h4v5M12 12.5a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2',
+  usercog: 'M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM3 21v-1a6 6 0 0 1 9.5-4.9M18 14.5V13M18 23v-1.5M22.3 18h-1.5M15.2 18h-1.5M18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4',
+  book: 'M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2v-.5zM4 19.5A2 2 0 0 0 6 21.5h14',
+  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3.2 2',
+  logout: 'M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16.5 14.5 12 10 7.5M14.5 12H3',
+  menu: 'M3.5 6.5h17M3.5 12h17M3.5 17.5h17',
+  plus: 'M12 5v14M5 12h14',
+  x: 'M6 6l12 12M18 6 6 18',
+  chev: 'M9 6l6 6-6 6',
+  up: 'M12 19V5M6 11l6-6 6 6',
+  down: 'M12 5v14M6 13l6 6 6-6',
+  download: 'M12 3v12M7 10l5 5 5-5M4 21h16',
+  print: 'M7 9V3h10v6M7 18H4v-7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7h-3M7 14h10v7H7z',
+  edit: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14',
+  phone: 'M5 4h3.5l2 5L8 10.5a11 11 0 0 0 5.5 5.5l1.5-2.5 5 2V19a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
+  info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7.6v.2',
+  msg: 'M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3.5 20l1.2-4.6A8.5 8.5 0 1 1 21 11.5z',
+  calendar: 'M4 5.5h16V21H4zM4 10h16M8.5 3v4M15.5 3v4',
+  lock: 'M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11',
+  unlock: 'M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 6.8-1.2',
+  eye: 'M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
+  refresh: 'M20 11a8 8 0 0 0-14.6-4.5M4 3.5v4h4M4 13a8 8 0 0 0 14.6 4.5M20 20.5v-4h-4',
+  ok: 'M5 12.5l4.5 4.5L19.5 7',
+  fast: 'M13 3 4 14h7l-1 7 9-11h-7z',
+  file: 'M14 3H6v18h12V7zM14 3v4h4M9 13h6M9 17h6',
+  pattern: 'M3 17l5-5 4 4 8-8M15 8h5v5',
+  flag: 'M5 21V4M5 4h11l-2 4 2 4H5',
+  clockBack: 'M3 12a9 9 0 1 0 3-6.7M3 4v4h4M12 7v5l3 2',
+  arrowRight: 'M5 12h14M13 6l6 6-6 6',
+  sun: 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4',
+  moon: 'M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z',
+  monitor: 'M3 4.5h18v12H3zM8.5 20.5h7M12 16.5v4',
+};
+
+export function icone(nome, tamanho) {
+  const estilo = tamanho ? ` style="width:${tamanho}px;height:${tamanho}px"` : '';
+  return `<svg class="ico" viewBox="0 0 24 24"${estilo} aria-hidden="true"><path d="${CAMINHOS[nome] || ''}"/></svg>`;
+}

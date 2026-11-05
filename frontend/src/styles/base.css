@@ -1,0 +1,56 @@
+/* Base: reset, tipografia, utilitários e impressão */
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+body.modal-aberto { overflow: hidden; }
+a { color: var(--primary-ink); }
+h1, h2, h3, h4 { margin: 0; line-height: 1.2; text-wrap: balance; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; border-radius: 6px; }
+
+.ico { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.mono { font-family: var(--f-mono); font-size: .86em; letter-spacing: .01em; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.eyebrow { font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--primary); animation: spin .7s linear infinite; display: inline-block; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { transform: translateY(8px) scale(.98); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Impressão de relatórios (exportar PDF) ---------- */
+#print-root { display: none; }
+.relatorio { font: 12px/1.45 var(--f-body); color: #1d213e; background: #fff; }
+.relatorio header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.relatorio h1 { font-family: var(--f-display); font-size: 22px; }
+.relatorio .filtros { color: #555d80; }
+.relatorio table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.relatorio th, .relatorio td { border-bottom: 1px solid #dbe0ee; padding: 5px 6px; text-align: left; vertical-align: top; }
+.relatorio th { background: #eef1f8; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; }
+.relatorio footer { margin-top: 14px; color: #555d80; font-size: 11px; }
+
+@media print {
+  body.imprimindo > *:not(#print-root) { display: none !important; }
+  body.imprimindo #print-root { display: block; }
+  body.imprimindo { background: #fff; }
+  @page { margin: 14mm; }
+}

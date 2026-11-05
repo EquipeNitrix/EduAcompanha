@@ -1,0 +1,5 @@
+-- quando realizar alguma alteração, utilizar o comando:
+
+npx vercel --prod
+
+para o site continuar no mesmo endereço: no projeto eduacompanha-web-v2 da Vercel, Settings → Git → conecte EquipeNitrix/EduAcompanha e em Build and Deployment coloque Root Directory = frontend.

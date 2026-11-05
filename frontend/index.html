@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>EduAcompanha</title>
+    <link rel="icon" type="image/svg+xml" href="./src/assets/favicon.svg">
+
+    <!-- Aplica o tema salvo antes do CSS, para a tela não piscar (ver src/app/tema.js) -->
+    <script>
+      try {
+        var tema = localStorage.getItem('eduacompanha:tema');
+        if (tema === 'claro') document.documentElement.dataset.theme = 'light';
+        if (tema === 'escuro') document.documentElement.dataset.theme = 'dark';
+      } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+
+    <link rel="stylesheet" href="./src/styles/tokens.css">
+    <link rel="stylesheet" href="./src/styles/base.css">
+    <link rel="stylesheet" href="./src/styles/layout.css">
+    <link rel="stylesheet" href="./src/styles/components.css">
+  </head>
+  <body>
+    <div id="app"><div class="loading-page"><span class="spinner"></span>Carregando EduAcompanha…</div></div>
+    <div id="modal-root"></div>
+    <div id="toasts" role="status" aria-live="polite"></div>
+    <div id="print-root" aria-hidden="true"></div>
+
+    <script type="module" src="./src/main.js"></script>
+
+    <!-- Useberry: testes de usabilidade com link ao vivo -->
+    <script type="text/javascript" src="https://api.useberry.com/integrations/liveUrl/scripts/useberryScript.js"></script>
+  </body>
+</html>
