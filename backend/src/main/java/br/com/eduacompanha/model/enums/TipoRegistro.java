@@ -1,5 +1,5 @@
 package br.com.eduacompanha.model.enums;
 
-public class TipoRegistro {
+public enum TipoRegistro {
     
 }
