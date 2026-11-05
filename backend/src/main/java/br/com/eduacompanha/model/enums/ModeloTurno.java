@@ -5,11 +5,11 @@ public enum ModeloTurno {
     PARCIAL("parcial"),
     INTEGRAL("integral");
 
- private final String codigoApi;
+    private final String codigoApi;
 
     // construtor
-    ModeloTurno(String codigoApi){
-        this.codigoApi = codigoApi; 
+    ModeloTurno(String codigoApi) {
+        this.codigoApi = codigoApi;
     }
 
     public String getCodigoApi() {
@@ -20,7 +20,7 @@ public enum ModeloTurno {
         for (ModeloTurno modelo : values()) {
 
             if (modelo.codigoApi.equals(codigo)) {
-                return tipo;
+                return modelo;
             }
         }
 

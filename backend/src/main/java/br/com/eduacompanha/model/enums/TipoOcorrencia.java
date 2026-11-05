@@ -40,3 +40,4 @@ public enum TipoOcorrencia {
         }
         throw new IllegalArgumentException("Tipo de ocorrência inválido: " + codigo);
     }
+}
