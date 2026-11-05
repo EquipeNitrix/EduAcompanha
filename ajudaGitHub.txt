@@ -1,0 +1,16 @@
+Primeiro acesso:
+git clone https://github.com/EquipeNitrix/EduAcompanha.git
+cd EduAcompanha
+
+-- caso execute o comando acima e não apareça as pastas, rode no terminal:
+code .  
+
+
+
+Toda vez que for programar:
+git pull
+
+Para enviar atualizações ao GitHub
+git add .
+git commit -m "Descrição da atualização"
+git push
