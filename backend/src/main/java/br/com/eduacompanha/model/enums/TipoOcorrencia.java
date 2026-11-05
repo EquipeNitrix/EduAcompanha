@@ -20,9 +20,10 @@ public enum TipoOcorrencia {
         this.codigoApi = codigoApi; // aqui a gaveta fica preenchida
     }
 
-    // getter, quando a API manda uma ocorrencia pro site, ela precisa escrever por exemplo:
+    // getter, quando a API manda uma ocorrencia pro site, ela precisa escrever por
+    // exemplo:
     // "saida" no JSON e não "SAIDA_ANTECIPADA", ai usa
-    //SAIDA_ANTECIPADA.getCodigoApi() -> "saída"
+    // SAIDA_ANTECIPADA.getCodigoApi() -> "saída"
     public String getCodigoApi() {
         return codigoApi;
     }
@@ -30,8 +31,8 @@ public enum TipoOcorrencia {
     // values() devolve as 4 constantes: FALTA, ATRASO, SAIDA_ANTECIPADA,
     // SAIDA_COM_RETORNO.
     // O for olha uma por uma.
-    public static TipoOcorrencia deCodigoApi(String codigo){
-        for (TipoOcorrencia tipo : values()){
+    public static TipoOcorrencia deCodigoApi(String codigo) {
+        for (TipoOcorrencia tipo : values()) {
             // Compara o apelido guardado nesta constante com o texto
             // que veio do site. Se for igual, achou.
             if (tipo.codigoApi.equals(codigo)) {

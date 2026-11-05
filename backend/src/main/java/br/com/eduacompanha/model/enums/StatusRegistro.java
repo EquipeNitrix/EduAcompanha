@@ -27,4 +27,3 @@ public enum StatusRegistro {
         throw new IllegalArgumentException("Status do registro inválido: " + codigo);
     }
 }
-
