@@ -6,17 +6,17 @@ USE eduacompanha;
 
 
 -- TABELAS SEM DEPENDÊNCIAS
-
-
--- Horário de envio das mensagens de falta, um por turno. NULL = turno sem envio
 CREATE TABLE ESCOLA (
     CIE CHAR(6) NOT NULL PRIMARY KEY,
     nome_escola VARCHAR(150) NOT NULL,
     municipio VARCHAR(60) NULL,
+    modelo_turno VARCHAR(10) NOT NULL DEFAULT 'PARCIAL',
     horario_envio_manha TIME NULL,
     horario_envio_tarde TIME NULL,
     horario_envio_noite TIME NULL,
-    CONSTRAINT ck_escola_cie CHECK (CIE REGEXP '^[0-9]{6}$')
+    horario_envio_integral TIME NULL,
+    CONSTRAINT ck_escola_cie CHECK (CIE REGEXP '^[0-9]{6}$'),
+    CONSTRAINT ck_escola_modelo_turno CHECK (modelo_turno IN ('PARCIAL', 'INTEGRAL'))
 ) ENGINE=InnoDB;
 
 -- Ano letivo: início e fim usados na contagem das aulas previstas
@@ -27,19 +27,21 @@ CREATE TABLE ANO_LETIVO (
     CONSTRAINT ck_ano_letivo_datas CHECK (data_fim > data_inicio)
 ) ENGINE=InnoDB;
 
-
+-- Aluno: id_aluno é a chave interna; o RA pode ser corrigido sem afetar as ligações
 CREATE TABLE ALUNO (
     id_aluno INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     RA CHAR(13) NOT NULL,
     nome_aluno VARCHAR(120) NOT NULL,
     CONSTRAINT uq_aluno_ra UNIQUE (RA),
+    -- RA: 12 dígitos + dígito verificador (número ou X), gravado sem hífen
     CONSTRAINT ck_aluno_ra CHECK (RA REGEXP '^[0-9]{12}[0-9X]$')
 ) ENGINE=InnoDB;
 
 
+-- 3. TABELAS COM DEPENDÊNCIAS (na ordem em que dependem umas das outras)
 
--- TABELAS COM DEPENDÊNCIAS
-
+-- Usuário do sistema. Administrador não tem escola;
+-- Secretaria pertence a exatamente uma escola.
 CREATE TABLE USUARIO (
     id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(120) NOT NULL,
@@ -56,8 +58,9 @@ CREATE TABLE USUARIO (
     CONSTRAINT ck_usuario_tentativas CHECK (tentativas_falhas >= 0)
 ) ENGINE=InnoDB;
 
-
--- O turno define qual horário de envio da escola vale para os alunos dela.
+-- Turma: pertence a uma escola e a um ano letivo.
+-- O turno define qual horário de envio e quais horários de aula valem para ela.
+-- Que o turno combine com o modelo da escola (INTEGRAL ou PARCIAL) é validado pelo sistema.
 CREATE TABLE TURMA (
     id_turma INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nome_turma VARCHAR(30) NOT NULL,
@@ -65,25 +68,27 @@ CREATE TABLE TURMA (
     ano_letivo INT NOT NULL,
     CIE CHAR(6) NOT NULL,
     CONSTRAINT uq_turma_escola_nome_ano UNIQUE (CIE, nome_turma, ano_letivo),
-    CONSTRAINT ck_turma_turno CHECK (turno IN ('MANHA', 'TARDE', 'NOITE'))
+    CONSTRAINT ck_turma_turno CHECK (turno IN ('MANHA', 'TARDE', 'NOITE', 'INTEGRAL'))
 ) ENGINE=InnoDB;
 
--- Quantidade de aulas em cada dia da semana, por escola e por turno
--- Base do cálculo da frequência em aulas.
--- data_vigencia: a partir de quando os números valem. Uma mudança cria linhas novas com nova data; as antigas continuam valendo para os dias anteriores,
--- então a frequência já calculada não muda. Para uma data, vale a linha com a
--- maior data_vigencia menor ou igual a ela.
-CREATE TABLE AULAS_DIA (
-    id_aulas_dia INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- Horário de cada aula, por escola, turno e dia da semana (1 = segunda ... 5 = sexta).
+-- A quantidade de aulas do dia é o número de linhas daquele dia; intervalo, almoço e tutoria não são cadastrados. Turno sem linhas = ainda não configurado.
+-- data_vigencia: a partir de quando a grade vale. Uma mudança cria linhas novas com nova data; as antigas continuam valendo para os dias anteriores, então a
+-- frequência já calculada não muda. Para uma data, vale a grade com a maior data_vigencia menor ou igual a ela.
+CREATE TABLE HORARIO_AULA (
+    id_horario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     CIE CHAR(6) NOT NULL,
     turno VARCHAR(10) NOT NULL,
     dia_semana INT NOT NULL,
-    qtd_aulas INT NOT NULL,
+    ordem_aula INT NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fim TIME NOT NULL,
     data_vigencia DATE NOT NULL,
-    CONSTRAINT uq_aulas_dia_escola_turno_dia_vigencia UNIQUE (CIE, turno, dia_semana, data_vigencia),
-    CONSTRAINT ck_aulas_dia_turno CHECK (turno IN ('MANHA', 'TARDE', 'NOITE')),
-    CONSTRAINT ck_aulas_dia_dia CHECK (dia_semana BETWEEN 1 AND 5),
-    CONSTRAINT ck_aulas_dia_qtd CHECK (qtd_aulas BETWEEN 0 AND 10)
+    CONSTRAINT uq_horario_escola_turno_dia_ordem_vigencia UNIQUE (CIE, turno, dia_semana, ordem_aula, data_vigencia),
+    CONSTRAINT ck_horario_turno CHECK (turno IN ('MANHA', 'TARDE', 'NOITE', 'INTEGRAL')),
+    CONSTRAINT ck_horario_dia CHECK (dia_semana BETWEEN 1 AND 5),
+    CONSTRAINT ck_horario_ordem CHECK (ordem_aula BETWEEN 1 AND 15),
+    CONSTRAINT ck_horario_periodo CHECK (hora_fim > hora_inicio)
 ) ENGINE=InnoDB;
 
 -- Responsável: pertence a um aluno. Se dois irmãos têm a mesma mãe,
@@ -96,7 +101,8 @@ CREATE TABLE RESPONSAVEL (
 ) ENGINE=InnoDB;
 
 -- Telefone de um responsável (nunca do aluno).
--- posicao é a ordem de contato do aluno: 1 = Principal, 2 = Secundário, 3 = Secundário 2
+-- posicao é a ordem de contato do aluno: 1 = Principal, 2 = Secundário, 3 = Secundário 2...
+-- Que a posição não se repita entre os telefones do mesmo aluno é validado pelo sistema.
 CREATE TABLE CONTATO_RESPONSAVEL (
     id_contato INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     telefone VARCHAR(15) NOT NULL,
@@ -120,9 +126,15 @@ CREATE TABLE MATRICULA (
     CONSTRAINT ck_matricula_encerrada CHECK (status = 'ATIVA' OR data_fim IS NOT NULL)
 ) ENGINE=InnoDB;
 
-
--- Uma falta vale para todas as aulas do dia, conforme AULAS_DIA da escola
--- vigente na data, para o turno da turma e o dia da semana da falta.
+-- Chamada diária: falta, atraso, saída antecipada ou saída com retorno.
+-- As aulas perdidas são calculadas pelo sistema com a HORARIO_AULA vigente na data:
+-- FALTA: todas as aulas do dia.
+-- ATRASO: as aulas que começaram antes de hora_entrada.
+-- SAIDA_ANTECIPADA: as aulas que começam a partir de hora_saida.
+-- SAIDA_COM_RETORNO: as aulas que começam entre hora_saida e hora_entrada.
+-- A saída é registrada na hora em que o aluno sai (SAIDA_ANTECIPADA, só hora_saida).
+-- Se ele voltar, o mesmo registro recebe hora_entrada e passa a SAIDA_COM_RETORNO.
+-- (A aula conta como presente se o aluno estava na escola no início dela.)
 -- O registro nunca é apagado: é cancelado com motivo.
 CREATE TABLE REGISTRO_FREQUENCIA (
     id_registro_freq INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -135,7 +147,18 @@ CREATE TABLE REGISTRO_FREQUENCIA (
     motivo_cancelamento VARCHAR(300) NULL,
     cancelado_em DATETIME NULL,
     id_usuario_cancelamento INT NULL,
-    CONSTRAINT ck_registro_tipo CHECK (tipo_ocorrencia IN ('FALTA', 'ATRASO', 'SAIDA_ANTECIPADA')),
+    hora_entrada TIME NULL,
+    hora_saida TIME NULL,
+    observacao VARCHAR(200) NULL,
+    CONSTRAINT ck_registro_tipo CHECK (tipo_ocorrencia IN ('FALTA', 'ATRASO', 'SAIDA_ANTECIPADA', 'SAIDA_COM_RETORNO')),
+    -- Horas de cada tipo: falta sem horas; atraso só com entrada; saída só com saída;
+    -- saída com retorno com as duas, e o retorno depois da saída.
+    CONSTRAINT ck_registro_horas CHECK (
+        (tipo_ocorrencia = 'FALTA' AND hora_entrada IS NULL AND hora_saida IS NULL)
+        OR (tipo_ocorrencia = 'ATRASO' AND hora_entrada IS NOT NULL AND hora_saida IS NULL)
+        OR (tipo_ocorrencia = 'SAIDA_ANTECIPADA' AND hora_saida IS NOT NULL AND hora_entrada IS NULL)
+        OR (tipo_ocorrencia = 'SAIDA_COM_RETORNO' AND hora_saida IS NOT NULL AND hora_entrada IS NOT NULL AND hora_entrada > hora_saida)
+    ),
     CONSTRAINT ck_registro_status CHECK (status IN ('ATIVO', 'CANCELADO')),
     -- Ativo: sem dados de cancelamento. Cancelado: motivo, data e usuário obrigatórios.
     CONSTRAINT ck_registro_cancelamento CHECK (
@@ -230,9 +253,11 @@ CREATE TABLE ACOMPANHAMENTO_CASO (
 ) ENGINE=InnoDB;
 
 
--- CHAVES ESTRANGEIRAS
--- RESTRICT (não deixa apagar um registro que ainda é usado).
-
+-- =====================================================================
+-- 4. CHAVES ESTRANGEIRAS
+-- Regra geral: RESTRICT (não deixa apagar um registro que ainda é usado).
+-- Exceções comentadas abaixo.
+-- =====================================================================
 
 ALTER TABLE USUARIO
     ADD CONSTRAINT fk_usuario_escola FOREIGN KEY (CIE) REFERENCES ESCOLA (CIE) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -241,8 +266,8 @@ ALTER TABLE TURMA
     ADD CONSTRAINT fk_turma_escola FOREIGN KEY (CIE) REFERENCES ESCOLA (CIE) ON DELETE RESTRICT ON UPDATE RESTRICT,
     ADD CONSTRAINT fk_turma_ano_letivo FOREIGN KEY (ano_letivo) REFERENCES ANO_LETIVO (ano) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE AULAS_DIA
-    ADD CONSTRAINT fk_aulas_dia_escola FOREIGN KEY (CIE) REFERENCES ESCOLA (CIE) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE HORARIO_AULA
+    ADD CONSTRAINT fk_horario_escola FOREIGN KEY (CIE) REFERENCES ESCOLA (CIE) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE RESPONSAVEL
     ADD CONSTRAINT fk_responsavel_aluno FOREIGN KEY (id_aluno) REFERENCES ALUNO (id_aluno) ON DELETE RESTRICT ON UPDATE RESTRICT;
