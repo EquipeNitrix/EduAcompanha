@@ -15,6 +15,8 @@ public class EscolaDao implements IEscolaDao {
 
     @Override
     public ArrayList<Escola> consultar() {
+    
+
         
         throw new UnsupportedOperationException("Unimplemented method 'consultar'");
     }
