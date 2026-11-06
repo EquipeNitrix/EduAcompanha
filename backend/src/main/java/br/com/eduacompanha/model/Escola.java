@@ -18,14 +18,14 @@ public class Escola {
 
     public Escola(String cie, String nomeEscola, String municipio, ModeloTurno modeloTurno, LocalTime horarioEnvioManha,
             LocalTime horarioEnvioTarde, LocalTime horarioEnvioNoite, LocalTime horarioEnvioIntegral) {
-                this.cie = cie;
-                this.nomeEscola = nomeEscola;
-                this.municipio = municipio;
-                this.modeloTurno = modeloTurno;
-                this.horarioEnvioManha = horarioEnvioManha;
-                this.horarioEnvioTarde = horarioEnvioTarde;
-                this.horarioEnvioNoite = horarioEnvioNoite;
-                this.horarioEnvioIntegral = horarioEnvioIntegral;
+        this.cie = cie;
+        this.nomeEscola = nomeEscola;
+        this.municipio = municipio;
+        this.modeloTurno = modeloTurno;
+        this.horarioEnvioManha = horarioEnvioManha;
+        this.horarioEnvioTarde = horarioEnvioTarde;
+        this.horarioEnvioNoite = horarioEnvioNoite;
+        this.horarioEnvioIntegral = horarioEnvioIntegral;
     }
 
     public String getCie() {
