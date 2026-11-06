@@ -1,6 +1,7 @@
 package br.com.eduacompanha.model;
 
 import java.time.LocalTime;
+import br.com.eduacompanha.model.enums.ModeloTurno;
 
 public class Escola {
     private String cie;
@@ -19,7 +20,7 @@ public class Escola {
             LocalTime horarioEnvioTarde, LocalTime horarioEnvioNoite, LocalTime horarioEnvioIntegral) {
                 this.cie = cie;
                 this.nomeEscola = nomeEscola;
-                this municipio = municipio;
+                this.municipio = municipio;
                 this.modeloTurno = modeloTurno;
                 this.horarioEnvioManha = horarioEnvioManha;
                 this.horarioEnvioTarde = horarioEnvioTarde;
