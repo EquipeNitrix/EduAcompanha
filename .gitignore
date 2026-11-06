@@ -9,3 +9,4 @@ dist/
 .env
 backend/target/
 frontend/dist/
+src/main/resources/db.properties

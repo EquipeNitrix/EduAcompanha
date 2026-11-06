@@ -1,0 +1,3 @@
+db.url=jdbc:mysql://localhost:3306/eduacompanha?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=America/Sao_Paulo
+db.usuario=root
+db.senha=COLOQUE_SUA_SENHA
