@@ -2,6 +2,7 @@ package br.com.eduacompanha.model;
 
 import java.time.LocalTime;
 import br.com.eduacompanha.model.enums.ModeloTurno;
+import br.com.eduacompanha.model.enums.Turno;
 
 public class Escola {
     private String cie;
@@ -90,6 +91,40 @@ public class Escola {
 
     public void setHorarioEnvioIntegral(LocalTime horarioEnvioIntegral) {
         this.horarioEnvioIntegral = horarioEnvioIntegral;
+    }
+
+    public LocalTime getHorarioEnvio(Turno turno) {
+        switch (turno) {
+            case MANHA:
+                return horarioEnvioManha;
+            case TARDE:
+                return horarioEnvioTarde;
+            case NOITE:
+                return horarioEnvioNoite;
+            case INTEGRAL:
+                return horarioEnvioIntegral;
+            default:
+                return null;
+        }
+    }
+
+    public void setHorarioEnvio(Turno turno, LocalTime horario) {
+        switch (turno) {
+            case MANHA:
+                horarioEnvioManha = horario;
+                break;
+            case TARDE:
+                horarioEnvioTarde = horario;
+                break;
+            case NOITE:
+                horarioEnvioNoite = horario;
+                break;
+            case INTEGRAL:
+                horarioEnvioIntegral = horario;
+                break;
+            default:
+                break;
+        }
     }
 
 }

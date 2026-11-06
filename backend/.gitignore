@@ -37,3 +37,4 @@ desktop.ini
 db.properties
 *.env
 .env
+src/main/resources/db.properties
