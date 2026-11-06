@@ -1,6 +1,7 @@
 package br.com.eduacompanha.model;
 
 import java.time.LocalDateTime;
+
 import br.com.eduacompanha.model.enums.Perfil;
 
 public class Usuario {

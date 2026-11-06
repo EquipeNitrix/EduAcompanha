@@ -1,6 +1,7 @@
 package br.com.eduacompanha.model;
 
 import java.time.LocalTime;
+
 import br.com.eduacompanha.model.enums.ModeloTurno;
 import br.com.eduacompanha.model.enums.Turno;
 
