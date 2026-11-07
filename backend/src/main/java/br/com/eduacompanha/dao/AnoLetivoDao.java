@@ -1,9 +1,11 @@
 package br.com.eduacompanha.dao;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import br.com.eduacompanha.model.AnoLetivo;
 
 public class AnoLetivoDao implements IAnoLetivoDao {
+    private Connection conexao;
 
     @Override
     public ArrayList<AnoLetivo> consultar() {

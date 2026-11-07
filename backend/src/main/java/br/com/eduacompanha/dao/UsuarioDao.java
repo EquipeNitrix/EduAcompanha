@@ -1,11 +1,13 @@
 package br.com.eduacompanha.dao;
 
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import br.com.eduacompanha.model.Usuario;
 
 public class UsuarioDao implements IUsuarioDao {
+    private Connection conexao;
 
     @Override
     public ArrayList<Usuario> consultar() {
