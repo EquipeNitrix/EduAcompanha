@@ -2,7 +2,7 @@ package br.com.eduacompanha.model.enums;
 
 public enum StatusMatricula {
     ATIVA("ativa"),
-    CANCELADA("cancelada");
+    ENCERRADA("encerrada");
 
     private final String codigoApi;
 

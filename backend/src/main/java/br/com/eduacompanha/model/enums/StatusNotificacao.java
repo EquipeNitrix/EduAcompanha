@@ -3,7 +3,7 @@ package br.com.eduacompanha.model.enums;
 public enum StatusNotificacao {
     AGUARDANDO("aguardando"),
     RESPONDIDA("respondida"),
-    SEM_RESPOSTA("sem resposta"),
+    SEM_RESPOSTA("sem_resposta"),
     INTERROMPIDA("interrompida");
 
     private final String codigoApi;
