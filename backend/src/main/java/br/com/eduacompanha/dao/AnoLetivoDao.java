@@ -2,10 +2,15 @@ package br.com.eduacompanha.dao;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.AnoLetivo;
 
 public class AnoLetivoDao implements IAnoLetivoDao {
     private Connection conexao;
+    public AnoLetivoDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<AnoLetivo> consultar() {

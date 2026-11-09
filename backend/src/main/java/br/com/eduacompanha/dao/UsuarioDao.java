@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.Usuario;
 
 public class UsuarioDao implements IUsuarioDao {
     private Connection conexao;
+    public UsuarioDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<Usuario> consultar() {

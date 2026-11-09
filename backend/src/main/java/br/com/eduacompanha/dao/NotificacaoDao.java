@@ -5,10 +5,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.Notificacao;
 
 public class NotificacaoDao implements INotificacaoDao {
     private Connection conexao;
+    public NotificacaoDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<Notificacao> consultar() {

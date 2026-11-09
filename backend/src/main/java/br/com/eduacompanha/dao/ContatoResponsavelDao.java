@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.ContatoResponsavel;
 
 public class ContatoResponsavelDao implements IContatoResponsavelDao{
     private Connection conexao;
+    public ContatoResponsavelDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<ContatoResponsavel> consultar() {

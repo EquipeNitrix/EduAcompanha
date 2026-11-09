@@ -6,10 +6,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.RegistroFrequencia;
 
 public class RegistroFrequenciaDao implements IRegistroFrequenciaDao {
     private Connection conexao;
+    public RegistroFrequenciaDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<RegistroFrequencia> consultar() {

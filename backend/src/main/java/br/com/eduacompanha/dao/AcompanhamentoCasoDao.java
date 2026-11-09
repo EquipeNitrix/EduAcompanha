@@ -4,10 +4,14 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.AcompanhamentoCaso;
 
 public class AcompanhamentoCasoDao implements IAcompanhamentoCasoDao {
     private Connection conexao;
+    public AcompanhamentoCasoDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<AcompanhamentoCaso> consultar() {

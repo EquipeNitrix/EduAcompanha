@@ -8,7 +8,6 @@ import br.com.eduacompanha.model.Escola;
 
 public class EscolaDao implements IEscolaDao {
     private Connection conexao;
-
     public EscolaDao() {
         conexao = new ConnectionFactory().getConnection();
     }

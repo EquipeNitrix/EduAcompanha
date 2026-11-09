@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.Turma;
 import br.com.eduacompanha.model.enums.Turno;
 
 public class TurmaDao implements ITurmaDao{
     private Connection conexao;
+    public TurmaDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<Turma> consultar() {

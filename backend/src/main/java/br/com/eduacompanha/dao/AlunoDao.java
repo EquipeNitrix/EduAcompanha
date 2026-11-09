@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.Aluno;
 import br.com.eduacompanha.model.ContatoResponsavel;
 import br.com.eduacompanha.model.Matricula;
@@ -11,6 +12,9 @@ import br.com.eduacompanha.model.Responsavel;
 
 public class AlunoDao implements IAlunoDao {
     private Connection conexao;
+    public AlunoDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<Aluno> consultar() {

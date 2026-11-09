@@ -3,10 +3,14 @@ package br.com.eduacompanha.dao;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.Matricula;
 
 public class MatriculaDao implements IMatriculaDao {
     private Connection conexao;
+    public MatriculaDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<Matricula> consultar() {

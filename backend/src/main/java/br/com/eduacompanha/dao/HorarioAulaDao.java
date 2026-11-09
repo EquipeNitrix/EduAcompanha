@@ -5,11 +5,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.eduacompanha.factory.ConnectionFactory;
 import br.com.eduacompanha.model.HorarioAula;
 import br.com.eduacompanha.model.enums.Turno;
 
 public class HorarioAulaDao implements IHorarioAulaDao{
     private Connection conexao;
+    public HorarioAulaDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
     public ArrayList<HorarioAula> consultar() {
