@@ -1,4 +1,4 @@
-/*package br.com.eduacompanha.main;
+package br.com.eduacompanha.main;
 
 import br.com.eduacompanha.factory.ConnectionFactory;
 
@@ -14,4 +14,3 @@ public class Main {
         conn.close();
     }
 }
-*/

@@ -2,7 +2,7 @@ package br.com.eduacompanha.dao;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-
+import br.com.eduacompanha.model.EnvioNotificacao;
 import br.com.eduacompanha.factory.ConnectionFactory;
 
 public class EnvioNotificacaoDao implements IEnvioNotificacaoDao {
@@ -12,25 +12,25 @@ public class EnvioNotificacaoDao implements IEnvioNotificacaoDao {
 }
 
     @Override
-    public ArrayList<EnvioNotificacaoDao> consultar() {
+    public ArrayList<EnvioNotificacao> consultar() {
         
         throw new UnsupportedOperationException("Unimplemented method 'consultar'");
     }
 
     @Override
-    public EnvioNotificacaoDao consultar(int idEnvio) {
+    public EnvioNotificacao consultar(int idEnvio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'consultar'");
     }
 
     @Override
-    public EnvioNotificacaoDao cadastrar(EnvioNotificacaoDao envio) {
+    public EnvioNotificacao cadastrar(EnvioNotificacao envio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'cadastrar'");
     }
 
     @Override
-    public boolean alterar(EnvioNotificacaoDao envio, int idEnvio) {
+    public boolean alterar(EnvioNotificacao envio, int idEnvio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'alterar'");
     }
@@ -42,13 +42,13 @@ public class EnvioNotificacaoDao implements IEnvioNotificacaoDao {
     }
 
     @Override
-    public ArrayList<EnvioNotificacaoDao> consultarPorNotificacao(int idNotificacao) {
+    public ArrayList<EnvioNotificacao> consultarPorNotificacao(int idNotificacao) {
       
         throw new UnsupportedOperationException("Unimplemented method 'consultarPorNotificacao'");
     }
 
     @Override
-    public EnvioNotificacaoDao consultarUltimoEnvio(int idNotificacao) {
+    public EnvioNotificacao consultarUltimoEnvio(int idNotificacao) {
         
         throw new UnsupportedOperationException("Unimplemented method 'consultarUltimoEnvio'");
     }
