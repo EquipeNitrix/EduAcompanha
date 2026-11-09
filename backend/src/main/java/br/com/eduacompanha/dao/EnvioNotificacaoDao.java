@@ -1,29 +1,36 @@
 package br.com.eduacompanha.dao;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
-public class EnvioNotificacao implements IEnvioNotificacaoDao {
+import br.com.eduacompanha.factory.ConnectionFactory;
+
+public class EnvioNotificacaoDao implements IEnvioNotificacaoDao {
+    private Connection conexao;
+    public EnvioNotificacaoDao() {
+    conexao = new ConnectionFactory().getConnection();
+}
 
     @Override
-    public ArrayList<EnvioNotificacao> consultar() {
+    public ArrayList<EnvioNotificacaoDao> consultar() {
         
         throw new UnsupportedOperationException("Unimplemented method 'consultar'");
     }
 
     @Override
-    public EnvioNotificacao consultar(int idEnvio) {
+    public EnvioNotificacaoDao consultar(int idEnvio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'consultar'");
     }
 
     @Override
-    public EnvioNotificacao cadastrar(EnvioNotificacao envio) {
+    public EnvioNotificacaoDao cadastrar(EnvioNotificacaoDao envio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'cadastrar'");
     }
 
     @Override
-    public boolean alterar(EnvioNotificacao envio, int idEnvio) {
+    public boolean alterar(EnvioNotificacaoDao envio, int idEnvio) {
        
         throw new UnsupportedOperationException("Unimplemented method 'alterar'");
     }
@@ -35,13 +42,13 @@ public class EnvioNotificacao implements IEnvioNotificacaoDao {
     }
 
     @Override
-    public ArrayList<EnvioNotificacao> consultarPorNotificacao(int idNotificacao) {
+    public ArrayList<EnvioNotificacaoDao> consultarPorNotificacao(int idNotificacao) {
       
         throw new UnsupportedOperationException("Unimplemented method 'consultarPorNotificacao'");
     }
 
     @Override
-    public EnvioNotificacao consultarUltimoEnvio(int idNotificacao) {
+    public EnvioNotificacaoDao consultarUltimoEnvio(int idNotificacao) {
         
         throw new UnsupportedOperationException("Unimplemented method 'consultarUltimoEnvio'");
     }
