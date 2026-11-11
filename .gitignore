@@ -10,3 +10,5 @@ dist/
 backend/target/
 frontend/dist/
 src/main/resources/db.properties
+src\assets\logo.svg
+src\assets\favicon.svg
