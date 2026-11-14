@@ -20,7 +20,7 @@ public class EscolaDao implements IEscolaDao {
     @Override
     public ArrayList<Escola> consultar() {
         ArrayList<Escola> lstEscolas = new ArrayList<>();
-        String query = "SELECT * FROM escola";
+        String query = "SELECT * FROM ESCOLA";
         PreparedStatement consulta = null;
         ResultSet resultado = null;
         try {
@@ -38,7 +38,7 @@ public class EscolaDao implements IEscolaDao {
 
     @Override
     public Escola consultar(String cie) {
-        String query = "SELECT * FROM escola WHERE CIE = ?";
+        String query = "SELECT * FROM ESCOLA WHERE CIE = ?";
         PreparedStatement consulta = null;
         ResultSet resultado = null;
         try {
@@ -58,9 +58,9 @@ public class EscolaDao implements IEscolaDao {
 
     @Override
     public Escola cadastrar(Escola escola) {
-        String query = "INSERT INTO escola (CIE, nome_escola, municipio, modelo_turno, horario_envio_manha,\n"
+        String query = "INSERT INTO ESCOLA (CIE, nome_escola, municipio, modelo_turno, horario_envio_manha,\n"
                 + "horario_envio_tarde, horario_envio_noite, horario_envio_integral)\n"
-                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?";
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement c = conexao.prepareStatement(query);
@@ -77,13 +77,13 @@ public class EscolaDao implements IEscolaDao {
             return escola;
 
         } catch (SQLException erro) {
-            throw new RuntimeException(erro.getMessage());
+            throw new RuntimeException(erro.getMessage(), erro);
         }
     }
 
     @Override
     public boolean alterar(Escola escola, String cie) {
-        String query = "UPDATE escola SET nome_escola = ?, municipio = ?, modelo_turno = ?, "
+        String query = "UPDATE ESCOLA SET nome_escola = ?, municipio = ?, modelo_turno = ?, "
                 + "horario_envio_manha = ?, horario_envio_tarde = ?, horario_envio_noite = ?, "
                 + "horario_envio_integral = ? WHERE CIE = ?";
         try {
@@ -98,19 +98,19 @@ public class EscolaDao implements IEscolaDao {
             c.setString(8, cie);
             return c.executeUpdate() > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro.getMessage());
+            throw new RuntimeException(erro.getMessage(), erro);
         }
     }
 
     @Override
     public boolean excluir(String cie) {
-        String query = "DELETE FROM escola WHERE CIE = ?";
+        String query = "DELETE FROM ESCOLA WHERE CIE = ?";
         try {
             PreparedStatement c = conexao.prepareStatement(query);
             c.setString(1, cie);
             return c.executeUpdate() > 0;
         } catch (SQLException erro) {
-            throw new RuntimeException(erro.getMessage());
+            throw new RuntimeException(erro.getMessage(), erro);
         }
     }
 
