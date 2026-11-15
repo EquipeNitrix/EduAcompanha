@@ -44,9 +44,32 @@ public class Tela {
         }
     }
 
+    public static String pedirTexto(String rotulo, String atual) {
+        String resposta = JOptionPane.showInputDialog(null, rotulo, atual);
+        if (resposta == null) {
+            return null;
+        } else {
+            return resposta.trim();
+        }
+    }
+
     public static LocalTime pedirHora(String rotulo) {
         while (true) {
             String resposta = pedirTexto(rotulo);
+            if (resposta == null || resposta.equals("")) {
+                return null;
+            }
+            try {
+                return LocalTime.parse(resposta, DateTimeFormatter.ofPattern("HH:mm"));
+            } catch (DateTimeParseException e) {
+                mostrar("Use o formato HH:MM, por exemplo 09:40.");
+            }
+        }
+    }
+
+    public static LocalTime pedirHora(String rotulo, LocalTime atual) {
+        while (true) {
+            String resposta = pedirTexto(rotulo, (atual == null ? null : atual.toString()));
             if (resposta == null || resposta.equals("")) {
                 return null;
             }
