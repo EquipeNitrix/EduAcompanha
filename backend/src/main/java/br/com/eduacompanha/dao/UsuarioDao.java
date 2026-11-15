@@ -60,7 +60,7 @@ public class UsuarioDao implements IUsuarioDao {
 
     @Override
     public Usuario cadastrar(Usuario usuario) {
-
+        
     }
 
     @Override
