@@ -20,7 +20,7 @@ public class EscolaDao implements IEscolaDao {
     @Override
     public ArrayList<Escola> consultar() {
         ArrayList<Escola> lstEscolas = new ArrayList<>();
-        String query = "SELECT * FROM ESCOLA";
+        String query = "SELECT * FROM ESCOLA ORDER BY nome_escola";
         PreparedStatement consulta = null;
         ResultSet resultado = null;
         try {
@@ -68,7 +68,6 @@ public class EscolaDao implements IEscolaDao {
             c.setString(2, escola.getNomeEscola());
             c.setString(3, escola.getMunicipio());
             c.setString(4, escola.getModeloTurno().name());
-            // setObject aceita LocalTime e grava NULL quando o horário é null
             c.setObject(5, escola.getHorarioEnvioManha());
             c.setObject(6, escola.getHorarioEnvioTarde());
             c.setObject(7, escola.getHorarioEnvioNoite());
