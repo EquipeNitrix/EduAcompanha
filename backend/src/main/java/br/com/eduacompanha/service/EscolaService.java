@@ -10,9 +10,11 @@ import java.util.Map;
 import java.util.Set;
 
 import br.com.eduacompanha.dao.IEscolaDao;
+import br.com.eduacompanha.dao.IHorarioAulaDao;
 import br.com.eduacompanha.dao.ITurmaDao;
 import br.com.eduacompanha.dao.IUsuarioDao;
 import br.com.eduacompanha.model.Escola;
+import br.com.eduacompanha.model.HorarioAula;
 import br.com.eduacompanha.model.Turma;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.model.enums.ModeloTurno;
@@ -23,18 +25,21 @@ public class EscolaService {
     private IEscolaDao escolaDao;
     private ITurmaDao turmaDao;
     private IUsuarioDao usuarioDao;
+    private IHorarioAulaDao horarioAulaDao;
     private Clock relogio;
 
-    public EscolaService(IEscolaDao escolaDao, ITurmaDao turmaDao, IUsuarioDao usuarioDao, Clock relogio) {
+    public EscolaService(IEscolaDao escolaDao, ITurmaDao turmaDao, IUsuarioDao usuarioDao,
+            IHorarioAulaDao horarioAulaDao, Clock relogio) {
         this.escolaDao = escolaDao;
         this.turmaDao = turmaDao;
         this.usuarioDao = usuarioDao;
+        this.horarioAulaDao = horarioAulaDao;
         this.relogio = relogio;
     }
 
     private void exigirAdmin(Usuario quem) {
         if (quem == null || quem.getPerfil() != Perfil.ADMIN) {
-            throw new RuntimeException("Seu perfil não tem permissão para esta ação.");
+            throw new AcessoNegadoException("Seu perfil não tem permissão para esta ação.");
         }
     }
 
@@ -96,16 +101,16 @@ public class EscolaService {
         }
 
         if (!erros.isEmpty()) {
-            throw new RuntimeException(erros.toString());
+            throw new ValidacaoException(erros);
         }
 
         Escola anterior = escolaDao.consultar(cie);
 
         if (nova && anterior != null) {
-            throw new RuntimeException("Já existe uma escola com este CIE.");
+            throw new ValidacaoException("cie", "Já existe uma escola com este CIE.");
         }
         if (!nova && anterior == null) {
-            throw new RuntimeException("Escola não encontrada.");
+            throw new NaoEncontradoException("Escola não encontrada.");
         }
 
         if (!nova && anterior.getModeloTurno() != modelo) {
@@ -113,7 +118,7 @@ public class EscolaService {
 
             for (Turma t : turmaDao.consultarPorEscola(cie, anoAtual)) {
                 if (!turnosDoModelo(modelo).contains(t.getTurno())) {
-                    throw new RuntimeException("A escola tem turmas de " + anoAtual
+                    throw new ValidacaoException("modeloTurno", "A escola tem turmas de " + anoAtual
                             + " em turnos do modelo atual. Para mudar o modelo, "
                             + "as turmas precisam estar no turno do novo modelo.");
                 }
@@ -166,8 +171,8 @@ public class EscolaService {
             }
             int pendentes = 0;
             for (Turno turno : turnosUsados) {
-                // TODO: contar também o turno sem grade
-                if (escola.getHorarioEnvio(turno) == null) {
+                List<HorarioAula> grade = horarioAulaDao.consultarPorEscolaTurno(escola.getCie(), turno);
+                if (escola.getHorarioEnvio(turno) == null || grade.isEmpty()) {
                     pendentes++;
                 }
             }
