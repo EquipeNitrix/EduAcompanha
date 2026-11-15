@@ -20,6 +20,7 @@ import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.model.enums.ModeloTurno;
 import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.model.enums.Turno;
+import br.com.eduacompanha.util.SessaoUtil;
 
 public class EscolaService {
     private IEscolaDao escolaDao;
@@ -37,7 +38,8 @@ public class EscolaService {
         this.relogio = relogio;
     }
 
-    private void exigirAdmin(Usuario quem) {
+    private void exigirAdmin() {
+        Usuario quem = SessaoUtil.getUsuario();
         if (quem == null || quem.getPerfil() != Perfil.ADMIN) {
             throw new AcessoNegadoException("Seu perfil não tem permissão para esta ação.");
         }
@@ -70,11 +72,11 @@ public class EscolaService {
         }
     }
 
-    public Escola salvar(Usuario quem, Escola dados, boolean nova) {
-        exigirAdmin(quem);
-        String cie = dados.getCie();
-        String nome = dados.getNomeEscola();
-        ModeloTurno modelo = dados.getModeloTurno();
+    public Escola salvar(Escola e, boolean nova) {
+        exigirAdmin();
+        String cie = e.getCie();
+        String nome = e.getNomeEscola();
+        ModeloTurno modelo = e.getModeloTurno();
 
         if (cie == null) {
             cie = "";
@@ -128,12 +130,12 @@ public class EscolaService {
         Escola escola = new Escola();
         escola.setCie(cie);
         escola.setNomeEscola(nome);
-        escola.setMunicipio(limparEspacos(dados.getMunicipio()));
+        escola.setMunicipio(limparEspacos(e.getMunicipio()));
         escola.setModeloTurno(modelo);
 
         for (Turno turno : Turno.values()) {
             if (turnosDoModelo(modelo).contains(turno)) {
-                escola.setHorarioEnvio(turno, dados.getHorarioEnvio(turno));
+                escola.setHorarioEnvio(turno, e.getHorarioEnvio(turno));
             } else if (anterior != null) {
                 escola.setHorarioEnvio(turno, anterior.getHorarioEnvio(turno));
             }
@@ -149,8 +151,8 @@ public class EscolaService {
     public record Resumo(Escola escola, int usuarios, int turmas, int turnosPendentes, String modelo) {
     }
 
-    public List<Resumo> listarResumo(Usuario quem) {
-        exigirAdmin(quem);
+    public List<Resumo> listarResumo() {
+        exigirAdmin();
         List<Resumo> resultado = new ArrayList<>();
 
         int anoAtual = LocalDate.now(relogio).getYear();
