@@ -62,7 +62,7 @@ public class UsuarioDao implements IUsuarioDao {
     @Override
     public Usuario cadastrar(Usuario usuario) {
         String query = "INSERT INTO USUARIO (nome, login, senha_hash, perfil, ativo, "
-                + "tentativas_falhas, bloqueado_ate, CIE "
+                + "tentativas_falhas, bloqueado_ate, CIE) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
@@ -163,11 +163,11 @@ public class UsuarioDao implements IUsuarioDao {
         u.setIdUsuario(resultado.getInt("id_usuario"));
         u.setNome(resultado.getString("nome"));
         u.setLogin(resultado.getString("login"));
-        u.setSenhaHash(resultado.getString("senhaHash"));
+        u.setSenhaHash(resultado.getString("senha_hash"));
         u.setPerfil(Perfil.valueOf(resultado.getString("perfil")));
         u.setAtivo(resultado.getBoolean("ativo"));
-        u.setTentativasFalhas(resultado.getInt("tentativasFalhas"));
-        u.setBloqueadoAte(JdbcUtil.lerDataHora(resultado, "bloqueadoAte"));
+        u.setTentativasFalhas(resultado.getInt("tentativa_falhas"));
+        u.setBloqueadoAte(JdbcUtil.lerDataHora(resultado, "bloqueado_ate"));
         u.setCie(resultado.getString("cie"));
         return u;
     }

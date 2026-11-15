@@ -133,7 +133,7 @@ public class AlunoDao implements IAlunoDao {
     @Override
     public List<Aluno> consultarPorNome(String trecho) {
         List<Aluno> lstAluno = new ArrayList<>();
-        String query = "SELECT * FROM ALUNO WHERE nome_completo LIKE ? ORDER BY nome_aluno";
+        String query = "SELECT * FROM ALUNO WHERE nome_aluno LIKE ? ORDER BY nome_aluno";
         PreparedStatement consulta = null;
         ResultSet resultado = null;
         try {
