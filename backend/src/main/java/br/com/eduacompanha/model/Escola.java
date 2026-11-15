@@ -94,6 +94,11 @@ public class Escola {
         this.horarioEnvioIntegral = horarioEnvioIntegral;
     }
 
+    @Override
+    public String toString() {
+        return getCie() + " - " + getNomeEscola();
+    }
+
     public LocalTime getHorarioEnvio(Turno turno) {
         switch (turno) {
             case MANHA:
