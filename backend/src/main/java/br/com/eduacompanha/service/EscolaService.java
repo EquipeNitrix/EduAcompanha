@@ -21,6 +21,7 @@ import br.com.eduacompanha.model.enums.ModeloTurno;
 import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.model.enums.Turno;
 import br.com.eduacompanha.util.SessaoUtil;
+import br.com.eduacompanha.util.TextoUtil;
 
 public class EscolaService {
     private IEscolaDao escolaDao;
@@ -66,7 +67,7 @@ public class EscolaService {
             cie = cie.trim();
         }
 
-        nome = SessaoUtil.limparEspacos(nome);
+        nome = TextoUtil.limparEspacos(nome);
 
         Map<String, String> erros = new LinkedHashMap<>();
 
@@ -112,7 +113,7 @@ public class EscolaService {
         Escola escola = new Escola();
         escola.setCie(cie);
         escola.setNomeEscola(nome);
-        escola.setMunicipio(SessaoUtil.limparEspacos(e.getMunicipio()));
+        escola.setMunicipio(TextoUtil.limparEspacos(e.getMunicipio()));
         escola.setModeloTurno(modelo);
 
         for (Turno turno : Turno.values()) {
