@@ -166,7 +166,7 @@ public class UsuarioDao implements IUsuarioDao {
         u.setSenhaHash(resultado.getString("senha_hash"));
         u.setPerfil(Perfil.valueOf(resultado.getString("perfil")));
         u.setAtivo(resultado.getBoolean("ativo"));
-        u.setTentativasFalhas(resultado.getInt("tentativa_falhas"));
+        u.setTentativasFalhas(resultado.getInt("tentativas_falhas"));
         u.setBloqueadoAte(JdbcUtil.lerDataHora(resultado, "bloqueado_ate"));
         u.setCie(resultado.getString("cie"));
         return u;

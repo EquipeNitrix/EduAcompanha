@@ -1,41 +1,30 @@
 package br.com.eduacompanha.main;
 
-import java.util.ArrayList;
+import java.time.Clock;
+import java.time.ZoneId;
 
 import br.com.eduacompanha.dao.EscolaDao;
-import br.com.eduacompanha.factory.ConnectionFactory;
-import br.com.eduacompanha.model.Escola;
+import br.com.eduacompanha.dao.HorarioAulaDao;
+import br.com.eduacompanha.dao.TurmaDao;
+import br.com.eduacompanha.dao.UsuarioDao;
+import br.com.eduacompanha.model.Usuario;
+import br.com.eduacompanha.model.enums.Perfil;
+import br.com.eduacompanha.service.EscolaService;
+import br.com.eduacompanha.util.SessaoUtil;
+import br.com.eduacompanha.view.MenuEscola;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        Clock relogio = Clock.system(ZoneId.of("America/Sao_Paulo"));
 
-        /*
-         * var conn = new ConnectionFactory().getConnection();
-         * System.out.println("Conectou!");
-         * 
-         * var rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM ESCOLA");
-         * rs.next();
-         * System.out.println("Escolas no banco: " + rs.getInt(1));
-         * 
-         * conn.close();
-         * }
-         */
+        EscolaService escolaService = new EscolaService(new EscolaDao(), new TurmaDao(), new UsuarioDao(),
+                new HorarioAulaDao(), relogio);
 
-        EscolaDao dao = new EscolaDao();
+        Usuario usuario = new Usuario();
+        usuario.setPerfil(Perfil.ADMIN);
+        SessaoUtil.entrar(usuario);
 
-        ArrayList<Escola> escolas = dao.consultar();
-        System.out.println("Escolas pelo DAO: " + escolas.size());
-
-        for (Escola e : escolas) {
-            System.out.println(e.getCie() + " - " + e.getNomeEscola()
-                    + " - " + e.getModeloTurno()
-                    + " - envio manhã: " + e.getHorarioEnvioManha());
-        }
-
-        // consultar por CIE
-        Escola roque = dao.consultar("035262");
-        System.out.println("Achou pelo CIE: " + (roque != null ? roque.getNomeEscola() : "não achou"));
-        System.out.println("CIE que não existe: " + dao.consultar("999999")); // tem que dar null
-
+        MenuEscola menuEscola = new MenuEscola(escolaService);
+        menuEscola.abrir();
     }
 }
