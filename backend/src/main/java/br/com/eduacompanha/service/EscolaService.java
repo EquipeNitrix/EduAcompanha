@@ -145,7 +145,7 @@ public class EscolaService {
                 }
             }
             resultado
-                    .add(new Resumo(escola, usuarios, turmas.size(), pendentes, nomeDoModelo(escola.getModeloTurno())));
+                    .add(new Resumo(escola, usuarios, turmas.size(), pendentes, escola.getModeloTurno().getNome()));
         }
 
         return resultado;

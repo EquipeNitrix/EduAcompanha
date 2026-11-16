@@ -3,6 +3,7 @@ package br.com.eduacompanha.service;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.com.eduacompanha.dao.IEscolaDao;
@@ -66,21 +67,33 @@ public class TurmaService {
 
         Escola escola = escolaDao.consultar(cieFinal);
         if (escola == null) {
-            throw new NaoEncontradoException("Escola não encontrada");
+            throw new NaoEncontradoException("Escola não encontrada.");
         }
 
-        if (!escola.___().___().contains(___)) {
-            String mensagem = "Esta escola usa o modelo \"" + ___ + "\". Escolha "
-                    + (___ == ModeloTurno.INTEGRAL ? "o turno Integral." : "manhã, tarde ou noite.");
+        if (!escola.getModeloTurno().turnos().contains(turno)) {
+            String mensagem = "Esta escola usa o modelo \"" + escola.getModeloTurno().getNome() + "\". Escolha "
+                    + (escola.getModeloTurno() == ModeloTurno.INTEGRAL ? "o turno Integral."
+                            : "manhã, tarde ou noite.");
             throw new ValidacaoException("turno", mensagem);
         }
 
-        /*
-         * RN-18: turno do modelo da escola
-         * RN-19: nome único na escola e no ano
-         * gravar
-         */
+        List<Turma> turmas = turmaDao.consultarPorEscola(cieFinal, ano);
+        for (Turma outra : turmas) {
+            if (TextoUtil.normalizar(outra.getNomeTurma()).equals(TextoUtil.normalizar(nome))
+                    && outra.getIdTurma() != t.getIdTurma()) {
+                throw new ValidacaoException("nome", "Já existe a turma " + nome + " nesta escola em " + ano + ".");
+            }
+        }
 
-        return null;
+        t.setNomeTurma(nome);
+        t.setAnoLetivo(ano);
+        t.setCie(cieFinal);
+
+        if (nova) {
+            return turmaDao.cadastrar(t);
+        } else {
+            turmaDao.alterar(t, t.getIdTurma());
+            return t;
+        }
     }
 }
