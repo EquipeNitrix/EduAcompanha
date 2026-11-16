@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -14,8 +15,10 @@ import javax.swing.JTextArea;
 import br.com.eduacompanha.service.ValidacaoException;
 
 public class Tela {
+    private static final ImageIcon icon = new ImageIcon(Tela.class.getResource("/icon.png"));
+
     public static void mostrar(String texto) {
-        JOptionPane.showMessageDialog(null, texto);
+        JOptionPane.showMessageDialog(null, texto, "EduAcompanha", JOptionPane.INFORMATION_MESSAGE, icon);
     }
 
     public static void erro(Exception excecao) {
@@ -32,11 +35,12 @@ public class Tela {
 
     public static int escolher(String titulo, String... opcoes) {
         return JOptionPane.showOptionDialog(null, titulo, "EduAcompanha", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                JOptionPane.QUESTION_MESSAGE, icon, opcoes, opcoes[0]);
     }
 
     public static String pedirTexto(String rotulo) {
-        String resposta = JOptionPane.showInputDialog(null, rotulo);
+        String resposta = (String) JOptionPane.showInputDialog(null, rotulo, "EduAcompanha",
+                JOptionPane.QUESTION_MESSAGE, icon, null, null);
         if (resposta == null) {
             return null;
         } else {
@@ -45,7 +49,8 @@ public class Tela {
     }
 
     public static String pedirTexto(String rotulo, String atual) {
-        String resposta = JOptionPane.showInputDialog(null, rotulo, atual);
+        String resposta = (String) JOptionPane.showInputDialog(null, rotulo, "EduAcompanha",
+                JOptionPane.QUESTION_MESSAGE, icon, null, atual);
         if (resposta == null) {
             return null;
         } else {
@@ -97,7 +102,7 @@ public class Tela {
             mostrar("Nenhum item cadastrado.");
             return null;
         }
-        return (T) JOptionPane.showInputDialog(null, titulo, "EduAcompanha", JOptionPane.QUESTION_MESSAGE, null,
+        return (T) JOptionPane.showInputDialog(null, titulo, "EduAcompanha", JOptionPane.QUESTION_MESSAGE, icon,
                 itens.toArray(), itens.get(0));
     }
 }
