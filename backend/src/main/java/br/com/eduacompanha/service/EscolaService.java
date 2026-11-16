@@ -38,17 +38,6 @@ public class EscolaService {
         this.relogio = relogio;
     }
 
-    private String limparEspacos(String texto) {
-        if (texto == null) {
-            return null;
-        }
-        String limpo = texto.trim().replaceAll("\\s+", " ");
-        if (limpo.equals("")) {
-            return null;
-        }
-        return limpo;
-    }
-
     private List<Turno> turnosDoModelo(ModeloTurno modelo) {
         if (modelo == ModeloTurno.INTEGRAL) {
             return List.of(Turno.INTEGRAL);
@@ -77,7 +66,7 @@ public class EscolaService {
             cie = cie.trim();
         }
 
-        nome = limparEspacos(nome);
+        nome = SessaoUtil.limparEspacos(nome);
 
         Map<String, String> erros = new LinkedHashMap<>();
 
@@ -123,7 +112,7 @@ public class EscolaService {
         Escola escola = new Escola();
         escola.setCie(cie);
         escola.setNomeEscola(nome);
-        escola.setMunicipio(limparEspacos(e.getMunicipio()));
+        escola.setMunicipio(SessaoUtil.limparEspacos(e.getMunicipio()));
         escola.setModeloTurno(modelo);
 
         for (Turno turno : Turno.values()) {
