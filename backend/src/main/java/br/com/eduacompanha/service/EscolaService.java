@@ -18,7 +18,6 @@ import br.com.eduacompanha.model.HorarioAula;
 import br.com.eduacompanha.model.Turma;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.model.enums.ModeloTurno;
-import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.model.enums.Turno;
 import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.util.TextoUtil;
@@ -37,22 +36,6 @@ public class EscolaService {
         this.usuarioDao = usuarioDao;
         this.horarioAulaDao = horarioAulaDao;
         this.relogio = relogio;
-    }
-
-    private List<Turno> turnosDoModelo(ModeloTurno modelo) {
-        if (modelo == ModeloTurno.INTEGRAL) {
-            return List.of(Turno.INTEGRAL);
-        } else {
-            return List.of(Turno.MANHA, Turno.TARDE, Turno.NOITE);
-        }
-    }
-
-    private String nomeDoModelo(ModeloTurno modelo) {
-        if (modelo == ModeloTurno.INTEGRAL) {
-            return "Integral";
-        } else {
-            return "Manhã, tarde e noite";
-        }
     }
 
     public Escola salvar(Escola e, boolean nova) {
@@ -102,7 +85,7 @@ public class EscolaService {
             int anoAtual = LocalDate.now(relogio).getYear();
 
             for (Turma t : turmaDao.consultarPorEscola(cie, anoAtual)) {
-                if (!turnosDoModelo(modelo).contains(t.getTurno())) {
+                if (!modelo.turnos().contains(t.getTurno())) {
                     throw new ValidacaoException("modeloTurno", "A escola tem turmas de " + anoAtual
                             + " em turnos do modelo atual. Para mudar o modelo, "
                             + "as turmas precisam estar no turno do novo modelo.");
@@ -117,7 +100,7 @@ public class EscolaService {
         escola.setModeloTurno(modelo);
 
         for (Turno turno : Turno.values()) {
-            if (turnosDoModelo(modelo).contains(turno)) {
+            if (modelo.turnos().contains(turno)) {
                 escola.setHorarioEnvio(turno, e.getHorarioEnvio(turno));
             } else if (anterior != null) {
                 escola.setHorarioEnvio(turno, anterior.getHorarioEnvio(turno));

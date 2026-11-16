@@ -25,14 +25,4 @@ public class SessaoUtil {
         }
     }
 
-    public static String limparEspacos(String texto) {
-        if (texto == null) {
-            return null;
-        }
-        String limpo = texto.trim().replaceAll("\\s+", " ");
-        if (limpo.equals("")) {
-            return null;
-        }
-        return limpo;
-    }
 }
