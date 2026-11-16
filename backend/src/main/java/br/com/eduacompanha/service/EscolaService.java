@@ -38,13 +38,6 @@ public class EscolaService {
         this.relogio = relogio;
     }
 
-    private void exigirAdmin() {
-        Usuario quem = SessaoUtil.getUsuario();
-        if (quem == null || quem.getPerfil() != Perfil.ADMIN) {
-            throw new AcessoNegadoException("Seu perfil não tem permissão para esta ação.");
-        }
-    }
-
     private String limparEspacos(String texto) {
         if (texto == null) {
             return null;
@@ -73,7 +66,7 @@ public class EscolaService {
     }
 
     public Escola salvar(Escola e, boolean nova) {
-        exigirAdmin();
+        SessaoUtil.exigirAdmin();
         String cie = e.getCie();
         String nome = e.getNomeEscola();
         ModeloTurno modelo = e.getModeloTurno();
@@ -152,7 +145,7 @@ public class EscolaService {
     }
 
     public List<Resumo> listarResumo() {
-        exigirAdmin();
+        SessaoUtil.exigirAdmin();
         List<Resumo> resultado = new ArrayList<>();
 
         int anoAtual = LocalDate.now(relogio).getYear();
