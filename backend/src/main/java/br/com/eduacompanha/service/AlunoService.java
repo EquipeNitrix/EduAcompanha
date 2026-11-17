@@ -21,6 +21,7 @@ import br.com.eduacompanha.model.Matricula;
 import br.com.eduacompanha.model.Responsavel;
 import br.com.eduacompanha.model.Turma;
 import br.com.eduacompanha.model.Usuario;
+import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.util.TextoUtil;
 
@@ -137,44 +138,79 @@ public class AlunoService {
 
     }
 
-    /*
-     * public Aluno editar(int idAluno, String raDigitado, String nomeDigitado) {
-     * Aluno aluno = alunoDao.consultar(idAluno);
-     * if (aluno == null) {
-     * throw new NaoEncontradoException("Aluno não encontrado.");
-     * }
-     * 
-     * 
-     * SessaoUtil.exigirAcessoEscola(escolaDoAluno(idAluno));
-     * 
-     * // 3. limpar e validar: copie do cadastrar as linhas do ra, do nome,
-     * // o Map de erros, os dois if de validação e o throw se tiver erro
-     * // (troque aluno.getRa() por raDigitado e aluno.getNomeAluno() por
-     * nomeDigitado)
-     * ________
-     * 
-     * // 4. RA repetido, ignorando o próprio aluno
-     * Aluno outro = alunoDao.consultarPorRa(ra);
-     * if (outro != null && ________) {
-     * throw new ValidacaoException("ra", "Já existe um aluno com este RA.");
-     * }
-     * 
-     * // 5. gravar
-     * aluno.setRa(ra);
-     * aluno.setNomeAluno(nome);
-     * alunoDao.________(aluno, idAluno);
-     * return aluno;
-     * }
-     * 
-     * private String escolaDoAluno(int idAluno) {
-     * List<Matricula> matriculas = matriculaDao.consultarPorAluno(idAluno);
-     * if (matriculas.isEmpty()) {
-     * return null;
-     * }
-     * Matricula maisRecente = matriculas.get(0);
-     * Turma turma = turmaDao.consultar(maisRecente.getIdTurma());
-     * return turma.getCie();
-     * }
-     */
+    public Aluno editar(int idAluno, String raDigitado, String nomeDigitado) {
+        Aluno aluno = alunoDao.consultar(idAluno);
+        if (aluno == null) {
+            throw new NaoEncontradoException("Aluno não encontrado.");
+        }
+
+        SessaoUtil.exigirAcessoEscola(escolaDoAluno(idAluno));
+
+        String ra = raDigitado == null ? "" : raDigitado.trim().replace("-", "").toUpperCase();
+        String nome = TextoUtil.limparEspacos(nomeDigitado);
+
+        Map<String, String> erros = new LinkedHashMap<>();
+
+        if (ra.equals("")) {
+            erros.put("ra", "Informe o RA.");
+        } else if (!ra.matches("\\d{12}[\\dX]")) {
+            erros.put("ra", "Use só números, com o dígito no final. Exemplo: 000123456789-0");
+        }
+
+        if (nome == null) {
+            erros.put("nome", "Informe o nome completo.");
+        } else if (!nome.contains(" ")) {
+            erros.put("nome", "Informe nome e sobrenome.");
+        }
+        if (!erros.isEmpty()) {
+            throw new ValidacaoException(erros);
+        }
+
+        Aluno outro = alunoDao.consultarPorRa(ra);
+        if (outro != null && outro.getIdAluno() != idAluno) {
+            throw new ValidacaoException("ra", "Já existe um aluno com este RA.");
+        }
+
+        aluno.setRa(ra);
+        aluno.setNomeAluno(nome);
+        alunoDao.alterar(aluno, idAluno);
+        return aluno;
+    }
+
+    public List<Aluno> buscar(String trecho) {
+        String termo = TextoUtil.limparEspacos(trecho);
+        if (termo == null) {
+            throw new ValidacaoException("busca", "Digite pelo menos parte do nome.");
+        }
+
+        Usuario usuario = SessaoUtil.getUsuario();
+        if (usuario == null) {
+            throw new AcessoNegadoException("Seu perfil não tem permissão para esta ação.");
+        }
+
+        List<Aluno> encontrados = alunoDao.consultarPorNome(termo);
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            return encontrados;
+        }
+
+        List<Aluno> daEscola = new ArrayList<>();
+        for (Aluno a : encontrados) {
+            if (usuario.getCie().equals(escolaDoAluno(a.getIdAluno()))) {
+                daEscola.add(a);
+            }
+        }
+        return daEscola;
+    }
+
+    private String escolaDoAluno(int idAluno) {
+        List<Matricula> matriculas = matriculaDao.consultarPorAluno(idAluno);
+        if (matriculas.isEmpty()) {
+            return null;
+        }
+        Matricula maisRecente = matriculas.get(0);
+        Turma turma = turmaDao.consultar(maisRecente.getIdTurma());
+        return turma.getCie();
+    }
 
 }
