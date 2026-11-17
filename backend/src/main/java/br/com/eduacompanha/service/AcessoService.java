@@ -38,7 +38,8 @@ public class AcessoService {
             long segundos = Duration.between(agora, usuario.getBloqueadoAte()).getSeconds();
             long minutos = (segundos + 59) / 60; // para arredondar, 61s = 2min
             throw new RegraNegocioException("Acesso bloqueado após " + MAX_TENTATIVAS
-                    + "tentativas incorretas. Tente de novo em " + minutos);
+                    + " tentativas incorretas. Tente de novo em " + minutos
+                    + " minutos");
         }
 
         // login não existe, inativo, senha errado dão a msm mensagem de erro
@@ -68,8 +69,8 @@ public class AcessoService {
         int falhas = usuario.getTentativasFalhas() + 1;
         if (falhas >= MAX_TENTATIVAS) {
             usuarioDao.atualizarTentativas(usuario.getIdUsuario(), 0, agora.plusMinutes(MINUTOS_BLOQUEIO));
-            throw new RegraNegocioException("Acesso bloqueado por " + MINUTOS_BLOQUEIO + "minutos após "
-                    + MAX_TENTATIVAS + "tentativas incorretas.");
+            throw new RegraNegocioException("Acesso bloqueado por " + MINUTOS_BLOQUEIO + " minutos após "
+                    + MAX_TENTATIVAS + " tentativas incorretas.");
         }
         usuarioDao.atualizarTentativas(usuario.getIdUsuario(), falhas, null);
     }
