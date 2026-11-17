@@ -96,4 +96,11 @@ public class TurmaService {
             return t;
         }
     }
+
+    public List<Turma> listar(String cie) {
+        SessaoUtil.exigirAdmin();
+        int anoAtual = LocalDate.now(relogio).getYear();
+        return turmaDao.consultarPorEscola(cie, anoAtual);
+    }
+
 }

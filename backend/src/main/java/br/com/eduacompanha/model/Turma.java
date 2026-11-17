@@ -59,4 +59,8 @@ public class Turma {
         this.cie = cie;
     }
 
+    @Override
+    public String toString() {
+        return getNomeTurma() + " - " + getTurno();
+    }
 }
