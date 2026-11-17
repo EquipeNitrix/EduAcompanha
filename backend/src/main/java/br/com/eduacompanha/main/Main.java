@@ -10,13 +10,16 @@ import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.service.EscolaService;
+import br.com.eduacompanha.service.TurmaService;
 import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.view.MenuEscola;
+import br.com.eduacompanha.view.MenuTurma;
 
 public class Main {
     public static void main(String[] args) {
         Clock relogio = Clock.system(ZoneId.of("America/Sao_Paulo"));
 
+        TurmaService turmaService = new TurmaService(new EscolaDao(), new TurmaDao(), relogio);
         EscolaService escolaService = new EscolaService(new EscolaDao(), new TurmaDao(), new UsuarioDao(),
                 new HorarioAulaDao(), relogio);
 
@@ -25,6 +28,9 @@ public class Main {
         SessaoUtil.entrar(usuario);
 
         MenuEscola menuEscola = new MenuEscola(escolaService);
-        menuEscola.abrir();
+        // menuEscola.abrir();
+
+        MenuTurma menuTurma = new MenuTurma(escolaService, turmaService);
+        menuTurma.abrir();
     }
 }
