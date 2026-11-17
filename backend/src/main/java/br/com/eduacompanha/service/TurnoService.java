@@ -188,4 +188,15 @@ public class TurnoService {
         return true;
 
     }
+
+    public void cancelarMudanca(String cie, Turno turno, LocalDate vigencia) {
+        SessaoUtil.exigirAcessoEscola(cie);
+        LocalDate hoje = LocalDate.now(relogio);
+        if (vigencia == null || !vigencia.isAfter(hoje)) {
+            throw new RegraNegocioException("Só é possível cancelar mudanças que ainda não começaram a valer.");
+        }
+        if (!horarioAulaDao.excluirVersao(cie, turno, vigencia)) {
+            throw new NaoEncontradoException("Mudança não encontrada.");
+        }
+    }
 }
