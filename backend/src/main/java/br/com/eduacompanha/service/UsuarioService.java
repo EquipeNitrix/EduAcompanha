@@ -160,7 +160,7 @@ public class UsuarioService {
             throw new NaoEncontradoException("Usuário não encontrado.");
         }
         if (u.getPerfil() != Perfil.SECRETARIA) {
-            throw new RegraNegocioException("A Conta da Equipe Nitrix não é editadas por esta tela.");
+            throw new RegraNegocioException("A Conta da Equipe Nitrix não é editada por esta tela.");
         }
         return u;
     }
