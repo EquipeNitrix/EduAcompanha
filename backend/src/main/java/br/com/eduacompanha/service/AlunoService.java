@@ -20,6 +20,7 @@ import br.com.eduacompanha.model.ContatoResponsavel;
 import br.com.eduacompanha.model.Matricula;
 import br.com.eduacompanha.model.Responsavel;
 import br.com.eduacompanha.model.Turma;
+import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.util.TextoUtil;
 
