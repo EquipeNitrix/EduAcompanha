@@ -19,7 +19,7 @@ public class TextoUtil {
         if (texto == null) {
             return null;
         }
-        String normalizado = Normalizer.normalize(texto, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase();
+        String normalizado = Normalizer.normalize(texto, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase().trim();
         return normalizado;
     }
 }
