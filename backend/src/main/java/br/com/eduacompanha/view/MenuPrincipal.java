@@ -15,15 +15,20 @@ public class MenuPrincipal {
     private MenuTurno menuTurno;
     private MenuUsuario menuUsuario;
     private MenuBuscaAtiva menuBuscaAtiva;
+    private MenuChamada menuChamada;
+    private MenuAlerta menuAlerta;
 
     public MenuPrincipal(AcessoService acessoService, MenuEscola menuEscola, MenuTurma menuTurma,
-            MenuTurno menuTurno, MenuUsuario menuUsuario, MenuBuscaAtiva menuBuscaAtiva) {
+            MenuTurno menuTurno, MenuUsuario menuUsuario, MenuBuscaAtiva menuBuscaAtiva,
+            MenuChamada menuChamada, MenuAlerta menuAlerta) {
         this.acessoService = acessoService;
         this.menuEscola = menuEscola;
         this.menuTurma = menuTurma;
         this.menuTurno = menuTurno;
         this.menuUsuario = menuUsuario;
         this.menuBuscaAtiva = menuBuscaAtiva;
+        this.menuChamada = menuChamada;
+        this.menuAlerta = menuAlerta;
     }
 
     // fica aberto até clicar pra sair
@@ -36,11 +41,14 @@ public class MenuPrincipal {
             opcoes.add("Escolas");
             opcoes.add("Usuarios");
             opcoes.add("Turmas");
+            opcoes.add("Turnos e envio");
+            opcoes.add("Alertas");
+        } else {
+            opcoes.add("Chamada");
+            opcoes.add("Turnos e envio");
+            opcoes.add("Alertas");
+            opcoes.add("Busca Ativa");
         }
-        // admin e secretaria
-        opcoes.add("Turnos e envio");
-        opcoes.add("Busca Ativa");
-        opcoes.add("Sair");
 
         while (true) {
             int escolha = Tela.escolher("Olá, " + usuario.getNome() + ". O que você quer fazer?",
@@ -66,6 +74,12 @@ public class MenuPrincipal {
                     break;
                 case "Busca Ativa":
                     menuBuscaAtiva.abrir();
+                    break;
+                case "Chamada":
+                    menuChamada.abrir();
+                    break;
+                case "Alertas":
+                    menuAlerta.abrir();
                     break;
                 case "Sair":
                     acessoService.sair();
