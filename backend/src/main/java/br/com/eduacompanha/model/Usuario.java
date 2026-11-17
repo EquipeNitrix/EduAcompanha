@@ -102,4 +102,9 @@ public class Usuario {
         this.cie = cie;
     }
 
+    @Override
+    public String toString() {
+        return nome + " (" + login + ")";
+    }
+
 }

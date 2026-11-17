@@ -13,13 +13,17 @@ public class MenuPrincipal {
     private MenuEscola menuEscola;
     private MenuTurma menuTurma;
     private MenuTurno menuTurno;
+    private MenuUsuario menuUsuario;
+    private MenuBuscaAtiva menuBuscaAtiva;
 
     public MenuPrincipal(AcessoService acessoService, MenuEscola menuEscola, MenuTurma menuTurma,
-            MenuTurno menuTurno) {
+            MenuTurno menuTurno, MenuUsuario menuUsuario, MenuBuscaAtiva menuBuscaAtiva) {
         this.acessoService = acessoService;
         this.menuEscola = menuEscola;
         this.menuTurma = menuTurma;
         this.menuTurno = menuTurno;
+        this.menuUsuario = menuUsuario;
+        this.menuBuscaAtiva = menuBuscaAtiva;
     }
 
     // fica aberto até clicar pra sair
@@ -30,10 +34,12 @@ public class MenuPrincipal {
         List<String> opcoes = new ArrayList<>();
         if (usuario.getPerfil() == Perfil.ADMIN) {
             opcoes.add("Escolas");
+            opcoes.add("Usuarios");
             opcoes.add("Turmas");
         }
         // admin e secretaria
         opcoes.add("Turnos e envio");
+        opcoes.add("Busca Ativa");
         opcoes.add("Sair");
 
         while (true) {
@@ -42,18 +48,24 @@ public class MenuPrincipal {
 
             if (escolha == -1) {
                 acessoService.sair();
-                return ;
+                return;
             }
 
             switch (opcoes.get(escolha)) {
                 case "Escolas":
                     menuEscola.abrir();
                     break;
-             case "Turmas":
+                case "Usuarios":
+                    menuUsuario.abrir();
+                    break;
+                case "Turmas":
                     menuTurma.abrir();
                     break;
                 case "Turnos e envio":
                     menuTurno.abrir();
+                    break;
+                case "Busca Ativa":
+                    menuBuscaAtiva.abrir();
                     break;
                 case "Sair":
                     acessoService.sair();

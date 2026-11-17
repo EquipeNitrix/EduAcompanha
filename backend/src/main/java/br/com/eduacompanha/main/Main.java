@@ -3,21 +3,30 @@ package br.com.eduacompanha.main;
 import java.time.Clock;
 import java.time.ZoneId;
 
+import br.com.eduacompanha.dao.AcompanhamentoCasoDao;
+import br.com.eduacompanha.dao.AlunoDao;
 import br.com.eduacompanha.dao.AnoLetivoDao;
+import br.com.eduacompanha.dao.CasoBuscaAtivaDao;
 import br.com.eduacompanha.dao.EscolaDao;
 import br.com.eduacompanha.dao.HorarioAulaDao;
+import br.com.eduacompanha.dao.MatriculaDao;
+import br.com.eduacompanha.dao.ResponsavelDao;
 import br.com.eduacompanha.dao.TurmaDao;
 import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.service.AcessoService;
+import br.com.eduacompanha.service.BuscaAtivaService;
 import br.com.eduacompanha.service.EscolaService;
 import br.com.eduacompanha.service.TurmaService;
 import br.com.eduacompanha.service.TurnoService;
+import br.com.eduacompanha.service.UsuarioService;
+import br.com.eduacompanha.view.MenuBuscaAtiva;
 import br.com.eduacompanha.view.MenuEscola;
 import br.com.eduacompanha.view.MenuPrincipal;
 import br.com.eduacompanha.view.MenuTurma;
 import br.com.eduacompanha.view.MenuTurno;
 import br.com.eduacompanha.view.TelaLogin;
+import br.com.eduacompanha.view.MenuUsuario;
 
 public class Main {
         public static void main(String[] args) {
@@ -30,13 +39,19 @@ public class Main {
                 AcessoService acessoService = new AcessoService(new UsuarioDao(), relogio);
                 TurnoService turnoService = new TurnoService(new HorarioAulaDao(), new EscolaDao(), new AnoLetivoDao(),
                                 relogio);
+                UsuarioService usuarioService = new UsuarioService(new UsuarioDao(), new EscolaDao());
+                BuscaAtivaService buscaAtivaService = new BuscaAtivaService(new CasoBuscaAtivaDao(),
+                                new AcompanhamentoCasoDao(), new AlunoDao(), new MatriculaDao(), new TurmaDao(),
+                                new ResponsavelDao(), relogio);
 
                 // telas aq.
                 TelaLogin telaLogin = new TelaLogin(acessoService);
                 MenuPrincipal menuPrincipal = new MenuPrincipal(acessoService,
                                 new MenuEscola(escolaService),
                                 new MenuTurma(escolaService, turmaService),
-                                new MenuTurno(escolaService, turnoService));
+                                new MenuTurno(escolaService, turnoService),
+                                new MenuUsuario(usuarioService, escolaService),
+                                new MenuBuscaAtiva(buscaAtivaService));
 
                 // login aq.
                 while (true) {

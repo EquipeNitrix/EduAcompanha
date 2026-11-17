@@ -9,6 +9,7 @@ import java.time.format.DateTimeParseException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -84,6 +85,16 @@ public class Tela {
                 mostrar("Use o formato HH:MM, por exemplo 09:40.");
             }
         }
+    }
+
+    public static String pedirSenha(String rotulo) {
+        JPasswordField campo = new JPasswordField(20);
+        int botao = JOptionPane.showConfirmDialog(null, campo, rotulo, JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE, icon);
+        if (botao != JOptionPane.OK_OPTION) {
+            return null;
+        }
+        return new String(campo.getPassword());
     }
 
     public static void mostrarLista(String titulo, String texto) {

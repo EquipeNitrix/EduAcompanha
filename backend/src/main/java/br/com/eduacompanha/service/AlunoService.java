@@ -136,42 +136,44 @@ public class AlunoService {
 
     }
 
-    /* 
-    public Aluno editar(int idAluno, String raDigitado, String nomeDigitado) {
-        Aluno aluno = alunoDao.consultar(idAluno);
-        if (aluno == null) {
-            throw new NaoEncontradoException("Aluno não encontrado.");
-        }
-
-        
-        SessaoUtil.exigirAcessoEscola(escolaDoAluno(idAluno));
-
-        // 3. limpar e validar: copie do cadastrar as linhas do ra, do nome,
-        //    o Map de erros, os dois if de validação e o throw se tiver erro
-        //    (troque aluno.getRa() por raDigitado e aluno.getNomeAluno() por nomeDigitado)
-        ________
-
-        // 4. RA repetido, ignorando o próprio aluno
-        Aluno outro = alunoDao.consultarPorRa(ra);
-        if (outro != null && ________) {
-            throw new ValidacaoException("ra", "Já existe um aluno com este RA.");
-        }
-
-        // 5. gravar
-        aluno.setRa(ra);
-        aluno.setNomeAluno(nome);
-        alunoDao.________(aluno, idAluno);
-        return aluno;
-    }
-
-    private String escolaDoAluno(int idAluno) {
-        List<Matricula> matriculas = matriculaDao.consultarPorAluno(idAluno);
-        if (matriculas.isEmpty()) {
-            return null;
-        }
-        Matricula maisRecente = matriculas.get(0);
-        Turma turma = turmaDao.consultar(maisRecente.getIdTurma());
-        return turma.getCie();
-    }*/
+    /*
+     * public Aluno editar(int idAluno, String raDigitado, String nomeDigitado) {
+     * Aluno aluno = alunoDao.consultar(idAluno);
+     * if (aluno == null) {
+     * throw new NaoEncontradoException("Aluno não encontrado.");
+     * }
+     * 
+     * 
+     * SessaoUtil.exigirAcessoEscola(escolaDoAluno(idAluno));
+     * 
+     * // 3. limpar e validar: copie do cadastrar as linhas do ra, do nome,
+     * // o Map de erros, os dois if de validação e o throw se tiver erro
+     * // (troque aluno.getRa() por raDigitado e aluno.getNomeAluno() por
+     * nomeDigitado)
+     * ________
+     * 
+     * // 4. RA repetido, ignorando o próprio aluno
+     * Aluno outro = alunoDao.consultarPorRa(ra);
+     * if (outro != null && ________) {
+     * throw new ValidacaoException("ra", "Já existe um aluno com este RA.");
+     * }
+     * 
+     * // 5. gravar
+     * aluno.setRa(ra);
+     * aluno.setNomeAluno(nome);
+     * alunoDao.________(aluno, idAluno);
+     * return aluno;
+     * }
+     * 
+     * private String escolaDoAluno(int idAluno) {
+     * List<Matricula> matriculas = matriculaDao.consultarPorAluno(idAluno);
+     * if (matriculas.isEmpty()) {
+     * return null;
+     * }
+     * Matricula maisRecente = matriculas.get(0);
+     * Turma turma = turmaDao.consultar(maisRecente.getIdTurma());
+     * return turma.getCie();
+     * }
+     */
 
 }

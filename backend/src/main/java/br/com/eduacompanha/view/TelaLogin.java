@@ -1,8 +1,5 @@
 package br.com.eduacompanha.view;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.service.AcessoService;
 
@@ -21,7 +18,7 @@ public class TelaLogin {
                 return null; // se clicou pra sair
             }
 
-            String senha = pedirSenha();
+            String senha = Tela.pedirSenha("Senha");
             if (senha == null) {
                 return null;
             }
@@ -35,18 +32,5 @@ public class TelaLogin {
             }
 
         }
-    }
-
-    // o showInputDialog mostra a senha na tela. O JPasswordField mostra bolinhas no
-    // lugar das letras.
-    private String pedirSenha() {
-        JPasswordField campo = new JPasswordField(20);
-        int botao = JOptionPane.showConfirmDialog(null, campo, "Senha", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (botao != JOptionPane.OK_OPTION) {
-            return null;
-        }
-        // getPassword devolve char, não String; new String converte.
-        return new String(campo.getPassword());
     }
 }
