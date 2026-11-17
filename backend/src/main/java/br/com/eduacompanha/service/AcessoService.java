@@ -5,7 +5,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import br.com.eduacompanha.dao.IUsuarioDao;
-import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.util.SenhaUtil;
 import br.com.eduacompanha.util.SessaoUtil;
