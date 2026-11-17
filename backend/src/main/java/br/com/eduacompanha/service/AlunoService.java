@@ -136,6 +136,7 @@ public class AlunoService {
 
     }
 
+    /* 
     public Aluno editar(int idAluno, String raDigitado, String nomeDigitado) {
         Aluno aluno = alunoDao.consultar(idAluno);
         if (aluno == null) {
@@ -171,6 +172,6 @@ public class AlunoService {
         Matricula maisRecente = matriculas.get(0);
         Turma turma = turmaDao.consultar(maisRecente.getIdTurma());
         return turma.getCie();
-    }
+    }*/
 
 }
