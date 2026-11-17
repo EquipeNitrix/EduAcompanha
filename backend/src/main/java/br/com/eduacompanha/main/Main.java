@@ -7,9 +7,12 @@ import br.com.eduacompanha.dao.AcompanhamentoCasoDao;
 import br.com.eduacompanha.dao.AlunoDao;
 import br.com.eduacompanha.dao.AnoLetivoDao;
 import br.com.eduacompanha.dao.CasoBuscaAtivaDao;
+import br.com.eduacompanha.dao.ContatoResponsavelDao;
+import br.com.eduacompanha.dao.EnvioNotificacaoDao;
 import br.com.eduacompanha.dao.EscolaDao;
 import br.com.eduacompanha.dao.HorarioAulaDao;
 import br.com.eduacompanha.dao.MatriculaDao;
+import br.com.eduacompanha.dao.NotificacaoDao;
 import br.com.eduacompanha.dao.RegistroFrequenciaDao;
 import br.com.eduacompanha.dao.ResponsavelDao;
 import br.com.eduacompanha.dao.TurmaDao;
@@ -20,6 +23,7 @@ import br.com.eduacompanha.service.AlertaService;
 import br.com.eduacompanha.service.BuscaAtivaService;
 import br.com.eduacompanha.service.EscolaService;
 import br.com.eduacompanha.service.FrequenciaService;
+import br.com.eduacompanha.service.NotificacaoService;
 import br.com.eduacompanha.service.TurmaService;
 import br.com.eduacompanha.service.TurnoService;
 import br.com.eduacompanha.service.UsuarioService;
@@ -27,6 +31,7 @@ import br.com.eduacompanha.view.MenuAlerta;
 import br.com.eduacompanha.view.MenuBuscaAtiva;
 import br.com.eduacompanha.view.MenuChamada;
 import br.com.eduacompanha.view.MenuEscola;
+import br.com.eduacompanha.view.MenuNotificacao;
 import br.com.eduacompanha.view.MenuPrincipal;
 import br.com.eduacompanha.view.MenuTurma;
 import br.com.eduacompanha.view.MenuTurno;
@@ -53,6 +58,9 @@ public class Main {
                                 relogio);
                 AlertaService alertaService = new AlertaService(frequenciaService, new MatriculaDao(),
                                 new TurmaDao(), new AnoLetivoDao(), new RegistroFrequenciaDao(), relogio);
+                NotificacaoService notificacaoService = new NotificacaoService(new NotificacaoDao(),
+                                new EnvioNotificacaoDao(), new ContatoResponsavelDao(), new RegistroFrequenciaDao(),
+                                new MatriculaDao(), new TurmaDao(), new AlunoDao(), new EscolaDao(), relogio);
 
                 // telas aq.
                 TelaLogin telaLogin = new TelaLogin(acessoService);
@@ -63,7 +71,8 @@ public class Main {
                                 new MenuUsuario(usuarioService, escolaService),
                                 new MenuBuscaAtiva(buscaAtivaService),
                                 new MenuChamada(frequenciaService),
-                                new MenuAlerta(escolaService, alertaService));
+                                new MenuAlerta(escolaService, alertaService),
+                                new MenuNotificacao(notificacaoService));
 
                 // login aq.
                 while (true) {

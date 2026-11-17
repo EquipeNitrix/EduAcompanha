@@ -17,10 +17,11 @@ public class MenuPrincipal {
     private MenuBuscaAtiva menuBuscaAtiva;
     private MenuChamada menuChamada;
     private MenuAlerta menuAlerta;
+    private MenuNotificacao menuNotificacao;
 
     public MenuPrincipal(AcessoService acessoService, MenuEscola menuEscola, MenuTurma menuTurma,
             MenuTurno menuTurno, MenuUsuario menuUsuario, MenuBuscaAtiva menuBuscaAtiva,
-            MenuChamada menuChamada, MenuAlerta menuAlerta) {
+            MenuChamada menuChamada, MenuAlerta menuAlerta, MenuNotificacao menuNotificacao) {
         this.acessoService = acessoService;
         this.menuEscola = menuEscola;
         this.menuTurma = menuTurma;
@@ -29,6 +30,7 @@ public class MenuPrincipal {
         this.menuBuscaAtiva = menuBuscaAtiva;
         this.menuChamada = menuChamada;
         this.menuAlerta = menuAlerta;
+        this.menuNotificacao = menuNotificacao;
     }
 
     // fica aberto até clicar pra sair
@@ -42,12 +44,15 @@ public class MenuPrincipal {
             opcoes.add("Usuarios");
             opcoes.add("Turmas");
             opcoes.add("Turnos e envio");
+            opcoes.add("Notificações");
             opcoes.add("Alertas");
         } else {
             opcoes.add("Chamada");
             opcoes.add("Turnos e envio");
             opcoes.add("Alertas");
+            opcoes.add("Notificações");
             opcoes.add("Busca Ativa");
+            opcoes.add("Sair");
         }
 
         while (true) {
@@ -80,6 +85,9 @@ public class MenuPrincipal {
                     break;
                 case "Alertas":
                     menuAlerta.abrir();
+                    break;
+                case "Notificações":
+                    menuNotificacao.abrir();
                     break;
                 case "Sair":
                     acessoService.sair();
