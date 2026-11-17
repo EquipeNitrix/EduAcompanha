@@ -25,4 +25,15 @@ public class SessaoUtil {
         }
     }
 
+    public static void exigirAcessoEscola(String cie) {
+        if (usuario == null) {
+            throw new AcessoNegadoException("Seu perfil não tem permissão para esta ação.");
+        }
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            return;
+        }
+        if (!usuario.getCie().equals(cie)) {
+            throw new AcessoNegadoException("Você não tem acesso aos dados desta escola.");
+        }
+    }
 }
