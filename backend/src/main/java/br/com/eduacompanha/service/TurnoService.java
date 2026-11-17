@@ -7,6 +7,8 @@ import java.util.List;
 
 import br.com.eduacompanha.dao.IHorarioAulaDao;
 import br.com.eduacompanha.model.HorarioAula;
+import br.com.eduacompanha.model.RegistroFrequencia;
+import br.com.eduacompanha.model.enums.TipoOcorrencia;
 
 public class TurnoService {
     private IHorarioAulaDao horarioAulaDao;
@@ -47,4 +49,24 @@ public class TurnoService {
         return aulas;
     }
 
+    public List<HorarioAula> aulasPerdidas(List<HorarioAula> versoes, RegistroFrequencia r) {
+        List<HorarioAula> aulas = aulasDoDia(versoes, r.getData());
+        if (aulas == null) {
+            return null;
+        }
+
+        if (r.getTipoOcorrencia() == TipoOcorrencia.FALTA) {
+            return aulas;
+        }
+
+        if (r.getTipoOcorrencia() == TipoOcorrencia.ATRASO) {
+            List<HorarioAula> perdidas = new ArrayList<>();
+            for (HorarioAula h : aulas) {
+                if (h.getHoraInicio().isBefore(r.getHoraEntrada())) {
+                    perdidas.add(h);
+                }
+            }
+            return perdidas;
+        }
+    }
 }
