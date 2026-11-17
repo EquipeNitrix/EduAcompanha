@@ -34,7 +34,7 @@ public class AlunoService {
     private IMatriculaDao matriculaDao;
     private Clock relogio;
 
-    private static final List<String> PARENTESCOS = List.of("Mãe", "Pai", "Avó", "Avô", "Tia", "Tio",
+    public static final List<String> PARENTESCOS = List.of("Mãe", "Pai", "Avó", "Avô", "Tia", "Tio",
             "Irmã", "Irmão", "Responsável legal", "Outro");
 
     public AlunoService(IAlunoDao alunoDao, ITurmaDao turmaDao, IAnoLetivoDao anoLetivoDao,

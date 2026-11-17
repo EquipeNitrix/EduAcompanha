@@ -118,13 +118,11 @@ public class MenuTurma {
     }
 
     private Escola escolherEscola() {
-        List<EscolaService.Resumo> resumos = escolaService.listarResumo();
+        List<Escola> escolas = escolaService.listarAcessiveis();
 
-        List<Escola> escolas = new ArrayList<>();
-        for (EscolaService.Resumo r : resumos) {
-            escolas.add(r.escola());
+        if (escolas.size() == 1) {
+            return escolas.get(0);
         }
-
         return Tela.escolherDaLista("Escolha a escola", escolas);
     }
 

@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.com.eduacompanha.dao.IAlunoDao;
@@ -100,6 +101,11 @@ public class MatriculaService {
         matricula.setDataFim(fim);
         matriculaDao.alterar(matricula, idMatricula);
         return matricula;
+    }
+
+    public List<Matricula> doAluno(int idAluno) {
+        SessaoUtil.exigirAdmin();
+        return matriculaDao.consultarPorAluno(idAluno);
     }
 
 }

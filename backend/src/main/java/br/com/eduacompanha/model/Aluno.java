@@ -36,4 +36,9 @@ public class Aluno {
     public void setNomeAluno(String nomeAluno) {
         this.nomeAluno = nomeAluno;
     }
+
+    @Override
+    public String toString() {
+        return getNomeAluno() + " - " + getRa();
+    }
 }
