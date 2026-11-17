@@ -1,6 +1,4 @@
 package br.com.eduacompanha.view;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.eduacompanha.model.Escola;
