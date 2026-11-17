@@ -18,6 +18,7 @@ import br.com.eduacompanha.model.HorarioAula;
 import br.com.eduacompanha.model.Turma;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.model.enums.ModeloTurno;
+import br.com.eduacompanha.model.enums.Perfil;
 import br.com.eduacompanha.model.enums.Turno;
 import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.util.TextoUtil;
@@ -149,5 +150,16 @@ public class EscolaService {
         }
 
         return resultado;
+    }
+
+    // escola que o usuario logado pode ver
+    public List<Escola> listarAcessiveis() {
+        Usuario usuario = SessaoUtil.getUsuario();
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            return escolaDao.consultar();
+        }
+        List<Escola> escolas = new ArrayList<>();
+        escolas.add(escolaDao.consultar(usuario.getCie()));
+        return escolas;
     }
 }
