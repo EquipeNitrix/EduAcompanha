@@ -8,12 +8,12 @@ import br.com.eduacompanha.dao.HorarioAulaDao;
 import br.com.eduacompanha.dao.TurmaDao;
 import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
-import br.com.eduacompanha.model.enums.Perfil;
+import br.com.eduacompanha.service.AcessoService;
 import br.com.eduacompanha.service.EscolaService;
 import br.com.eduacompanha.service.TurmaService;
-import br.com.eduacompanha.util.SessaoUtil;
 import br.com.eduacompanha.view.MenuEscola;
 import br.com.eduacompanha.view.MenuTurma;
+import br.com.eduacompanha.view.TelaLogin;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,12 +23,14 @@ public class Main {
         EscolaService escolaService = new EscolaService(new EscolaDao(), new TurmaDao(), new UsuarioDao(),
                 new HorarioAulaDao(), relogio);
 
-        Usuario usuario = new Usuario();
-        usuario.setPerfil(Perfil.ADMIN);
-        SessaoUtil.entrar(usuario);
+        AcessoService acessoService = new AcessoService(new UsuarioDao(), relogio);
+
+        Usuario usuario = new TelaLogin(acessoService).abrir();
+        if (usuario == null) {
+            return;
+        }
 
         MenuEscola menuEscola = new MenuEscola(escolaService);
-        // menuEscola.abrir();
 
         MenuTurma menuTurma = new MenuTurma(escolaService, turmaService);
         menuTurma.abrir();
