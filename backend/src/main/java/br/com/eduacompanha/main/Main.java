@@ -20,14 +20,17 @@ import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.service.AcessoService;
 import br.com.eduacompanha.service.AlertaService;
+import br.com.eduacompanha.service.AlunoService;
 import br.com.eduacompanha.service.BuscaAtivaService;
 import br.com.eduacompanha.service.EscolaService;
 import br.com.eduacompanha.service.FrequenciaService;
+import br.com.eduacompanha.service.MatriculaService;
 import br.com.eduacompanha.service.NotificacaoService;
 import br.com.eduacompanha.service.TurmaService;
 import br.com.eduacompanha.service.TurnoService;
 import br.com.eduacompanha.service.UsuarioService;
 import br.com.eduacompanha.view.MenuAlerta;
+import br.com.eduacompanha.view.MenuAluno;
 import br.com.eduacompanha.view.MenuBuscaAtiva;
 import br.com.eduacompanha.view.MenuChamada;
 import br.com.eduacompanha.view.MenuEscola;
@@ -61,6 +64,10 @@ public class Main {
                 NotificacaoService notificacaoService = new NotificacaoService(new NotificacaoDao(),
                                 new EnvioNotificacaoDao(), new ContatoResponsavelDao(), new RegistroFrequenciaDao(),
                                 new MatriculaDao(), new TurmaDao(), new AlunoDao(), new EscolaDao(), relogio);
+                AlunoService alunoService = new AlunoService(new AlunoDao(), new TurmaDao(), new AnoLetivoDao(),
+                                new ResponsavelDao(), new ContatoResponsavelDao(), new MatriculaDao(), relogio);
+                MatriculaService matriculaService = new MatriculaService(new MatriculaDao(), new AlunoDao(),
+                                new TurmaDao(), new AnoLetivoDao(), relogio);
 
                 // telas aq.
                 TelaLogin telaLogin = new TelaLogin(acessoService);
@@ -72,7 +79,8 @@ public class Main {
                                 new MenuBuscaAtiva(buscaAtivaService),
                                 new MenuChamada(frequenciaService),
                                 new MenuAlerta(escolaService, alertaService),
-                                new MenuNotificacao(notificacaoService));
+                                new MenuNotificacao(notificacaoService),
+                                new MenuAluno(escolaService, turmaService, matriculaService, alunoService));
 
                 // login aq.
                 while (true) {

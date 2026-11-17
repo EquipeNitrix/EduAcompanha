@@ -32,18 +32,14 @@ import br.com.eduacompanha.model.enums.TipoOcorrencia;
 import br.com.eduacompanha.model.enums.Turno;
 import br.com.eduacompanha.util.SessaoUtil;
 
-// Frequência (RN-43 a 56). Regras copiadas do frequencia.service.js do site.
 // Lançar falta, atraso, saída; registrar volta; cancelar; "chegou atrasado"; e o cálculo do percentual.
 public class FrequenciaService {
 
     private static final DateTimeFormatter BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final String MOTIVO_CHEGOU_ATRASADO = "Aluno chegou atrasado depois da conferência em sala.";
 
-    // ------------------------------------------------------------------
-    // Records: pacotes de dados prontos para o menu mostrar
-    // ------------------------------------------------------------------
-
-    // Uma ocorrência do dia, com o nome do aluno e quantas aulas ele perdeu por ela.
+    // Uma ocorrência do dia, com o nome do aluno e quantas aulas ele perdeu por
+    // ela.
     public record OcorrenciaDoDia(RegistroFrequencia registro, String nomeAluno, int aulasPerdidas) {
         @Override
         public String toString() {
@@ -91,17 +87,14 @@ public class FrequenciaService {
         this.relogio = relogio;
     }
 
-    // ------------------------------------------------------------------
-    // Consultas para a tela da chamada
-    // ------------------------------------------------------------------
-
     // Turmas do ano atual da escola da secretaria.
     public List<Turma> turmasParaChamada() {
         Usuario usuario = exigirSecretaria();
         return turmaDao.consultarPorEscola(usuario.getCie(), LocalDate.now(relogio).getYear());
     }
 
-    // Lista da chamada: cada aluno matriculado na data, com a frequência e as ocorrências do dia.
+    // Lista da chamada: cada aluno matriculado na data, com a frequência e as
+    // ocorrências do dia.
     public DadosChamada dadosDaChamada(int idTurma, LocalDate data) {
         exigirSecretaria();
         Turma turma = buscarTurma(idTurma);
@@ -144,9 +137,6 @@ public class FrequenciaService {
         return freq;
     }
 
-    // ------------------------------------------------------------------
-    // RN-43 a 51: lançar uma ocorrência
-    // ------------------------------------------------------------------
     public RegistroFrequencia lancar(int idMatricula, LocalDate data, TipoOcorrencia tipo, LocalTime entrada,
             LocalTime saida, String obs) {
         Usuario usuario = exigirSecretaria();
@@ -161,7 +151,7 @@ public class FrequenciaService {
         AnoLetivo ano = anoLetivoDao.consultar(turma.getAnoLetivo());
         LocalDate hoje = LocalDate.now(relogio);
 
-        // RN-44: turma, data e matrícula
+        // turma, data e matrícula
         if (turma.getAnoLetivo() != hoje.getYear()) {
             throw new RegraNegocioException(
                     "Esta turma é de um ano letivo encerrado. Não é possível lançar frequência.");
@@ -181,7 +171,7 @@ public class FrequenciaService {
             throw new RegraNegocioException("O aluno não estava matriculado nesta turma nesta data.");
         }
 
-        // RN-45: precisa ter grade e aula no dia
+        // precisa ter grade e aula no dia
         List<HorarioAula> versoes = turnoService.versoes(turma.getCie(), turma.getTurno());
         List<HorarioAula> aulas = turnoService.aulasDoDia(versoes, data);
         if (aulas == null) {
@@ -193,7 +183,7 @@ public class FrequenciaService {
                     "O " + nomeDoTurno(turma.getTurno()) + " não tem aula na " + nomeDoDia(data) + ".");
         }
 
-        // RN-46: as horas que cada tipo pede
+        // as horas que cada tipo pede
         if (tipo == TipoOcorrencia.FALTA) {
             entrada = null;
             saida = null;
@@ -207,13 +197,13 @@ public class FrequenciaService {
             }
         }
 
-        // RN-51: observação opcional, no máximo 200 caracteres
+        // observação opcional, no máximo 200 caracteres
         String texto = obs == null ? "" : obs.trim();
         if (texto.length() > 200) {
             texto = texto.substring(0, 200);
         }
 
-        // RN-47 a 49: combinação com o que já tem no dia
+        // combinação com o que já tem no dia
         List<RegistroFrequencia> doDia = ativosDoDia(idMatricula, data);
         if (tipo == TipoOcorrencia.FALTA && !doDia.isEmpty()) {
             throw new RegraNegocioException("O aluno tem outra ocorrência neste dia, então esteve na escola. "
@@ -246,14 +236,14 @@ public class FrequenciaService {
             }
         }
 
-        // RN-50: se perde todas as aulas, é falta
+        // se perde todas as aulas, é falta
         int perdidas = contarPerdidas(versoes, novo);
         if (tipo != TipoOcorrencia.FALTA && perdidas == aulas.size()) {
             throw new RegraNegocioException("Com esse horário o aluno perde todas as " + aulas.size()
                     + " aulas do dia. Nesse caso, registre falta.");
         }
 
-        // RN-51: grava quem registrou e quando
+        // grava quem registrou e quando
         novo.setObservacao(texto.isEmpty() ? null : texto);
         novo.setStatus(StatusRegistro.ATIVO);
         novo.setRegistradoEm(LocalDateTime.now(relogio));
@@ -261,9 +251,8 @@ public class FrequenciaService {
         return registroDao.cadastrar(novo);
     }
 
-    // ------------------------------------------------------------------
-    // RN-52: registrar a volta de uma saída
-    // ------------------------------------------------------------------
+    // registrar a volta de uma saída
+
     public RegistroFrequencia registrarVolta(int idRegistroSaida, LocalTime volta) {
         exigirSecretaria();
         RegistroFrequencia saida = buscarRegistro(idRegistroSaida);
@@ -292,9 +281,8 @@ public class FrequenciaService {
         return saida;
     }
 
-    // ------------------------------------------------------------------
-    // RN-53: cancelar (nunca apaga)
-    // ------------------------------------------------------------------
+    // cancelar (nunca apaga)
+
     public RegistroFrequencia cancelar(int idRegistro, String motivo) {
         Usuario usuario = exigirSecretaria();
         String texto = motivo == null ? "" : motivo.trim();
@@ -308,14 +296,14 @@ public class FrequenciaService {
         registroDao.cancelar(idRegistro, texto, usuario.getIdUsuario(), LocalDateTime.now(relogio));
 
         if (registro.getTipoOcorrencia() == TipoOcorrencia.FALTA) {
-            // TODO parte F (RN-62): notificacaoService.interromperSeSemFalta(idAluno, registro.getData());
+            // TODO parte F (RN-62): notificacaoService.interromperSeSemFalta(idAluno,
+            // registro.getData());
         }
         return registroDao.consultar(idRegistro);
     }
 
-    // ------------------------------------------------------------------
-    // RN-54: a falta de hoje vira atraso
-    // ------------------------------------------------------------------
+    // a falta de hoje vira atraso
+
     public RegistroFrequencia chegouAtrasado(int idRegistroFalta, LocalTime entrada) {
         Usuario usuario = exigirSecretaria();
         RegistroFrequencia falta = buscarRegistro(idRegistroFalta);
@@ -351,13 +339,13 @@ public class FrequenciaService {
         atraso.setIdUsuarioRegistro(usuario.getIdUsuario());
         RegistroFrequencia criado = registroDao.cadastrar(atraso);
 
-        // TODO parte F (RN-62): notificacaoService.interromperSeSemFalta(idAluno, falta.getData());
+        // TODO parte F (RN-62): notificacaoService.interromperSeSemFalta(idAluno,
+        // falta.getData());
         return criado;
     }
 
-    // ------------------------------------------------------------------
-    // RN-55 e 56: o cálculo. Não olha a Sessao nem o banco: só faz a conta.
-    // ------------------------------------------------------------------
+    // o cálculo. Não olha a Sessao nem o banco: só faz a conta.
+
     public AlunoFrequencia calcular(Matricula m, List<HorarioAula> versoes, List<RegistroFrequencia> registros,
             AnoLetivo ano) {
         // só os registros ativos contam
@@ -367,7 +355,7 @@ public class FrequenciaService {
             if (r.getStatus() == StatusRegistro.ATIVO) {
                 ativos.add(r);
                 if (r.getTipoOcorrencia() == TipoOcorrencia.FALTA) {
-                    diasComFalta++; // RN-56: não limita ao período
+                    diasComFalta++; // não limita ao período
                 }
             }
         }
@@ -396,7 +384,8 @@ public class FrequenciaService {
             }
         }
 
-        // aulas perdidas: por dia, junta as ordens num Set (uma aula só conta uma vez no dia)
+        // aulas perdidas: por dia, junta as ordens num Set (uma aula só conta uma vez
+        // no dia)
         Map<LocalDate, Set<Integer>> perdidasPorDia = new LinkedHashMap<>();
         for (RegistroFrequencia r : ativos) {
             if (r.getData().isBefore(inicio) || r.getData().isAfter(fim)) {
@@ -441,10 +430,6 @@ public class FrequenciaService {
                 return "";
         }
     }
-
-    // ------------------------------------------------------------------
-    // Métodos de apoio (private)
-    // ------------------------------------------------------------------
 
     // RN-43: só a secretaria lança
     private Usuario exigirSecretaria() {
@@ -494,7 +479,8 @@ public class FrequenciaService {
         return ativos;
     }
 
-    // RN-46: confere as horas de cada tipo. Junta os erros e lança uma ValidacaoException.
+    // RN-46: confere as horas de cada tipo. Junta os erros e lança uma
+    // ValidacaoException.
     private void validarHoras(TipoOcorrencia tipo, LocalTime entrada, LocalTime saida, List<HorarioAula> aulas) {
         boolean precisaEntrada = tipo == TipoOcorrencia.ATRASO || tipo == TipoOcorrencia.SAIDA_COM_RETORNO;
         boolean precisaSaida = tipo == TipoOcorrencia.SAIDA_ANTECIPADA || tipo == TipoOcorrencia.SAIDA_COM_RETORNO;
@@ -530,8 +516,10 @@ public class FrequenciaService {
         }
     }
 
-    // RN-49: cada ocorrência ocupa um intervalo do dia; dois intervalos não podem se cruzar.
-    // atraso: 00:00 até a entrada. saída: da saída até 23:59. saiu e voltou: da saída até a volta.
+    // RN-49: cada ocorrência ocupa um intervalo do dia; dois intervalos não podem
+    // se cruzar.
+    // atraso: 00:00 até a entrada. saída: da saída até 23:59. saiu e voltou: da
+    // saída até a volta.
     private boolean sobrepoe(RegistroFrequencia a, RegistroFrequencia b) {
         return inicioDoIntervalo(a).isBefore(fimDoIntervalo(b)) && inicioDoIntervalo(b).isBefore(fimDoIntervalo(a));
     }
