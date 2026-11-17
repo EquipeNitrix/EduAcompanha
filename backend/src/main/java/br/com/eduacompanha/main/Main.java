@@ -10,17 +10,22 @@ import br.com.eduacompanha.dao.CasoBuscaAtivaDao;
 import br.com.eduacompanha.dao.EscolaDao;
 import br.com.eduacompanha.dao.HorarioAulaDao;
 import br.com.eduacompanha.dao.MatriculaDao;
+import br.com.eduacompanha.dao.RegistroFrequenciaDao;
 import br.com.eduacompanha.dao.ResponsavelDao;
 import br.com.eduacompanha.dao.TurmaDao;
 import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
 import br.com.eduacompanha.service.AcessoService;
+import br.com.eduacompanha.service.AlertaService;
 import br.com.eduacompanha.service.BuscaAtivaService;
 import br.com.eduacompanha.service.EscolaService;
+import br.com.eduacompanha.service.FrequenciaService;
 import br.com.eduacompanha.service.TurmaService;
 import br.com.eduacompanha.service.TurnoService;
 import br.com.eduacompanha.service.UsuarioService;
+import br.com.eduacompanha.view.MenuAlerta;
 import br.com.eduacompanha.view.MenuBuscaAtiva;
+import br.com.eduacompanha.view.MenuChamada;
 import br.com.eduacompanha.view.MenuEscola;
 import br.com.eduacompanha.view.MenuPrincipal;
 import br.com.eduacompanha.view.MenuTurma;
@@ -43,6 +48,11 @@ public class Main {
                 BuscaAtivaService buscaAtivaService = new BuscaAtivaService(new CasoBuscaAtivaDao(),
                                 new AcompanhamentoCasoDao(), new AlunoDao(), new MatriculaDao(), new TurmaDao(),
                                 new ResponsavelDao(), relogio);
+                FrequenciaService frequenciaService = new FrequenciaService(new RegistroFrequenciaDao(),
+                                new MatriculaDao(), new TurmaDao(), new AlunoDao(), new AnoLetivoDao(), turnoService,
+                                relogio);
+                AlertaService alertaService = new AlertaService(frequenciaService, new MatriculaDao(),
+                                new TurmaDao(), new AnoLetivoDao(), new RegistroFrequenciaDao(), relogio);
 
                 // telas aq.
                 TelaLogin telaLogin = new TelaLogin(acessoService);
@@ -51,7 +61,9 @@ public class Main {
                                 new MenuTurma(escolaService, turmaService),
                                 new MenuTurno(escolaService, turnoService),
                                 new MenuUsuario(usuarioService, escolaService),
-                                new MenuBuscaAtiva(buscaAtivaService));
+                                new MenuBuscaAtiva(buscaAtivaService),
+                                new MenuChamada(frequenciaService),
+                                new MenuAlerta(escolaService, alertaService));
 
                 // login aq.
                 while (true) {
