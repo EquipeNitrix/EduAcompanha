@@ -3,47 +3,49 @@ package br.com.eduacompanha.main;
 import java.time.Clock;
 import java.time.ZoneId;
 
-import br.com.eduacompanha.dao.AcompanhamentoCasoDao;
-import br.com.eduacompanha.dao.AlunoDao;
-import br.com.eduacompanha.dao.CasoBuscaAtivaDao;
+import br.com.eduacompanha.dao.AnoLetivoDao;
 import br.com.eduacompanha.dao.EscolaDao;
 import br.com.eduacompanha.dao.HorarioAulaDao;
-import br.com.eduacompanha.dao.MatriculaDao;
-import br.com.eduacompanha.dao.ResponsavelDao;
 import br.com.eduacompanha.dao.TurmaDao;
 import br.com.eduacompanha.dao.UsuarioDao;
 import br.com.eduacompanha.model.Usuario;
-import br.com.eduacompanha.model.enums.Perfil;
-import br.com.eduacompanha.service.BuscaAtivaService;
+import br.com.eduacompanha.service.AcessoService;
 import br.com.eduacompanha.service.EscolaService;
 import br.com.eduacompanha.service.TurmaService;
-import br.com.eduacompanha.util.SessaoUtil;
-import br.com.eduacompanha.view.MenuBuscaAtiva;
+import br.com.eduacompanha.service.TurnoService;
 import br.com.eduacompanha.view.MenuEscola;
+import br.com.eduacompanha.view.MenuPrincipal;
 import br.com.eduacompanha.view.MenuTurma;
+import br.com.eduacompanha.view.MenuTurno;
+import br.com.eduacompanha.view.TelaLogin;
 
 public class Main {
-    public static void main(String[] args) {
-        Clock relogio = Clock.system(ZoneId.of("America/Sao_Paulo"));
+        public static void main(String[] args) {
+                Clock relogio = Clock.system(ZoneId.of("America/Sao_Paulo"));
 
-        TurmaService turmaService = new TurmaService(new EscolaDao(), new TurmaDao(), relogio);
-        EscolaService escolaService = new EscolaService(new EscolaDao(), new TurmaDao(), new UsuarioDao(),
-                new HorarioAulaDao(), relogio);
-        BuscaAtivaService buscaAtivaService = new BuscaAtivaService(new CasoBuscaAtivaDao(),
-                new AcompanhamentoCasoDao(), new AlunoDao(), new MatriculaDao(), new TurmaDao(), new ResponsavelDao(),
-                relogio);
+                // services aq.
+                TurmaService turmaService = new TurmaService(new EscolaDao(), new TurmaDao(), relogio);
+                EscolaService escolaService = new EscolaService(new EscolaDao(), new TurmaDao(), new UsuarioDao(),
+                                new HorarioAulaDao(), relogio);
+                AcessoService acessoService = new AcessoService(new UsuarioDao(), relogio);
+                TurnoService turnoService = new TurnoService(new HorarioAulaDao(), new EscolaDao(), new AnoLetivoDao(),
+                                relogio);
 
-        Usuario usuario = new Usuario();
-        usuario.setPerfil(Perfil.ADMIN);
-        SessaoUtil.entrar(usuario);
+                // telas aq.
+                TelaLogin telaLogin = new TelaLogin(acessoService);
+                MenuPrincipal menuPrincipal = new MenuPrincipal(acessoService,
+                                new MenuEscola(escolaService),
+                                new MenuTurma(escolaService, turmaService),
+                                new MenuTurno(escolaService, turnoService));
 
-        MenuEscola menuEscola = new MenuEscola(escolaService);
-        // menuEscola.abrir();
+                // login aq.
+                while (true) {
+                        Usuario usuario = telaLogin.abrir();
+                        if (usuario == null) {
+                                return;
+                        }
+                        menuPrincipal.abrir();
+                }
 
-        MenuTurma menuTurma = new MenuTurma(escolaService, turmaService);
-        // menuTurma.abrir();
-
-        MenuBuscaAtiva menuBuscaAtiva = new MenuBuscaAtiva(buscaAtivaService);
-        menuBuscaAtiva.abrir();
-    }
+        }
 }
